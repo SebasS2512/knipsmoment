@@ -1,10 +1,34 @@
 import { useRef, useState, type ChangeEvent } from 'react'
+import { Capacitor } from '@capacitor/core'
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import type { CaptureMode } from '../types/models'
 import type { QueueSummary } from './useUploadQueue'
 import { useOnline } from '../lib/useOnline'
 
 const TOAST_MS = 1300
 const STRIP_MAX = 7
+
+/**
+ * Nativer Kamera-/Galerie-Zugriff über das Capacitor-Camera-Plugin.
+ * Liefert null, wenn der Gast abbricht oder die Berechtigung verweigert.
+ */
+async function nativePhoto(source: CameraSource): Promise<File | null> {
+  try {
+    const photo = await Camera.getPhoto({
+      resultType: CameraResultType.Uri,
+      source,
+      quality: 90,
+      correctOrientation: true,
+    })
+    if (!photo.webPath) return null
+    const blob = await fetch(photo.webPath).then((r) => r.blob())
+    return new File([blob], `knips-${Date.now()}.jpg`, {
+      type: blob.type || 'image/jpeg',
+    })
+  } catch {
+    return null
+  }
+}
 
 /**
  * Screen B — Sucher / Kamera (§4.1, `02-gast-sucher.png`).
@@ -42,10 +66,8 @@ export function CameraScreen({
   const remaining = limit - taken
   const online = useOnline()
 
-  function handleFile(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    e.target.value = ''
-    if (!file || remaining <= 0) return
+  function acceptPhoto(file: File) {
+    if (remaining <= 0) return
 
     onPhoto(file)
     setFlashKey((k) => k + 1)
@@ -59,8 +81,27 @@ export function CameraScreen({
     )
   }
 
+  function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (file) acceptPhoto(file)
+  }
+
+  // Nativ (Capacitor): Camera-Plugin. Web: verstecktes <input capture>/<input>.
+  async function capture(source: 'camera' | 'gallery') {
+    if (Capacitor.isNativePlatform()) {
+      const file = await nativePhoto(
+        source === 'camera' ? CameraSource.Camera : CameraSource.Photos,
+      )
+      if (file) acceptPhoto(file)
+    } else {
+      const input = source === 'camera' ? cameraInput : galleryInput
+      input.current?.click()
+    }
+  }
+
   // Modus 'upload' (§4.3): der Auslöser öffnet den Picker statt der Kamera
-  const shutterInput = captureMode === 'upload' ? galleryInput : cameraInput
+  const shutterSource = captureMode === 'upload' ? 'gallery' : 'camera'
 
   const stripShots = shots.slice(-STRIP_MAX)
   // Nach Reload liegen keine Object-URLs mehr vor — Platzhalter-Frames auffüllen
@@ -119,7 +160,7 @@ export function CameraScreen({
             <button
               type="button"
               className="upload-btn"
-              onClick={() => galleryInput.current?.click()}
+              onClick={() => void capture('gallery')}
               disabled={remaining <= 0}
             >
               AUS
@@ -132,7 +173,7 @@ export function CameraScreen({
           type="button"
           className="shutter"
           aria-label="Auslösen"
-          onClick={() => shutterInput.current?.click()}
+          onClick={() => void capture(shutterSource)}
           disabled={remaining <= 0}
         />
         <div className="side right">

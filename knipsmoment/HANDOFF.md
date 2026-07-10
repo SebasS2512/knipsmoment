@@ -44,6 +44,12 @@ Firebase-Projekt `knipsmoment` verifiziert:
   Auto-Retry bei `online`-Event, neutrale Landing auf `/` in Produktion
   (Demo-Event nur bei `import.meta.env.DEV`).
 
+- **Capacitor ist integriert** (Prüfungsanforderung): `capacitor.config.ts`
+  (appId `de.knipsmoment.app`, androidScheme https), Android-Projekt unter
+  `android/`, Kamera nativ über `@capacitor/camera` (`nativePhoto()` in
+  `src/guest/CameraScreen.tsx`), Web-Fallback bleibt `<input capture>`.
+  Workflow: `npm run build` → `npx cap sync android` → Android Studio/gradlew.
+
 ## Offene Aufgaben (in dieser Reihenfolge)
 
 ### Rest von Schritt 8 (braucht echte Geräte / den Betreiber)

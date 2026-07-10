@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Knipsmoment</string>
+    <string name="title_activity_main">Knipsmoment</string>
+    <string name="package_name">de.knipsmoment.app</string>
+    <string name="custom_url_scheme">de.knipsmoment.app</string>
+</resources>

@@ -47,6 +47,22 @@ npm run dev      # http://localhost:5173
 npm run build    # Type-Check + Produktions-Build
 ```
 
+## Native App (Capacitor)
+
+Die App läuft zusätzlich als native Android-App (Prüfungsanforderung).
+Der Auslöser nutzt nativ das `@capacitor/camera`-Plugin, im Browser den
+`<input capture>`-Fallback.
+
+```bash
+npm run build                 # Web-Assets bauen
+npx cap sync android          # nach jedem Build in das Android-Projekt kopieren
+npx cap open android          # Android Studio öffnen (Emulator/Gerät starten)
+# oder ohne Android Studio:
+cd android; .\gradlew assembleDebug   # APK: android/app/build/outputs/apk/debug/
+```
+
+Voraussetzungen: Android Studio + SDK; `android/local.properties` zeigt auf das SDK.
+
 ## Firebase
 
 Projekt: `knipsmoment` · Config in `.env.local` (Vorlage: `.env.example`).

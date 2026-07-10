@@ -13,8 +13,8 @@
 |---|---|
 | Framework (React/Ionic/Vue/…) | ✅ React + Vite + TypeScript |
 | Externe Daten aus einer API | ✅ Firebase (Firestore + Storage + Auth) — Cloud-APIs über SDK |
-| Telefondaten/Gerätefunktionen | ✅ Kamera — *aktuell `<input capture>`, sollte auf Capacitor-Camera-Plugin umgestellt werden* |
-| **Native App mit Capacitor** | ❌ *FEHLT NOCH — muss eingebaut werden (cap init, android/ios-Projekt, Build aufs Gerät)* |
+| Telefondaten/Gerätefunktionen | ✅ Kamera über `@capacitor/camera` (nativ), `<input capture>` als Web-Fallback |
+| **Native App mit Capacitor** | ✅ Android-Projekt integriert (`capacitor.config.ts`, `android/`) — *auf echtem Gerät testen!* |
 | KI-Kennzeichnung | 🔶 Git-Historie vorhanden; Kennzeichnungskonzept siehe unten — *vorab mit Dozent klären!* |
 
 ---
@@ -180,9 +180,8 @@ Ergänzungssatz nach der Standardformel, z. B.:
 
 ## To-do-Liste bis zur Abgabe (14.09.2026)
 
-1. **Capacitor integrieren** (Pflicht!): `npm i @capacitor/core @capacitor/cli`,
-   `npx cap init`, `npx cap add android`, Kamera auf `@capacitor/camera` umstellen,
-   Build auf echtem Gerät testen
+1. ~~Capacitor integrieren~~ ✅ erledigt — **noch offen: Debug-APK auf echtem
+   Gerät installieren und Kamera/Upload durchtesten**
 2. Kommilitonen-Test durchführen + protokollieren
 3. Testdaten aus Firebase entfernen
 4. Bericht schreiben (Gliederung oben), Screenshots ziehen
