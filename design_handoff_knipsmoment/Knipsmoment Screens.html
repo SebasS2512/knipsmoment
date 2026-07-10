@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knipsmoment — Screens Board (Figma-ready)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body { background: #DAD3C4; }
+  .board { padding: 70px 60px 110px; }
+  .board-head { max-width: 1100px; margin: 0 auto 60px; }
+  .board-head .eyebrow { display:block; margin-bottom: 16px; }
+  .board-head h1 { font-family: var(--serif); font-size: 56px; line-height: 1.0; letter-spacing:-0.02em; }
+  .board-head p { margin-top: 16px; font-size: 17px; color: var(--ink-soft); max-width: 640px; }
+  .board-head .hint {
+    margin-top: 22px; display:inline-flex; gap:10px; align-items:center;
+    font-family: var(--mono); font-size: 12px; color: var(--accent-deep);
+    background: var(--paper); border:1px solid var(--line); border-radius: 999px; padding: 9px 16px;
+  }
+
+  .flow-section { max-width: 1500px; margin: 0 auto 72px; }
+  .flow-section > .sec-label {
+    font-family: var(--mono); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .flow-section > .sec-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); letter-spacing:0.06em; margin-bottom: 26px; }
+
+  .frames-row { display: flex; gap: 30px; flex-wrap: wrap; align-items: flex-start; }
+
+  .artboard { position: relative; }
+  .artboard > .ab-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+    letter-spacing: 0.04em; margin-bottom: 10px; display:flex; align-items:center; gap:8px;
+  }
+  .artboard > .ab-label b { color: var(--ink); font-weight: 600; }
+  .artboard > .ab-label .dim { color: var(--ink-faint); margin-left:auto; }
+
+  /* full-bleed device frame — true artboard, no bezel */
+  .frame { position:relative; width:300px; height:650px; background:var(--paper); border-radius:30px; overflow:hidden; box-shadow:0 24px 50px -22px rgba(42,40,34,0.45), 0 0 0 1px rgba(42,40,34,0.06); }
+  .frame .done { justify-content:flex-start; padding-top:64px; }
+  .frame.cam { background: #14130f; }
+  .frame .screen { position: absolute; opacity: 1; pointer-events: auto; }
+  /* mini film frames inside board screens */
+  .vf-strip .frame2 { width:30px; height:22px; border-radius:2px; flex:none; background:var(--paper-3); background-image:repeating-linear-gradient(-45deg, rgba(42,40,34,0.08) 0 5px, transparent 5px 10px); border:1px solid rgba(255,255,255,0.25); }
+  .roll .frame3 { width:40px; height:30px; border-radius:2px; background:var(--paper-3); background-image:repeating-linear-gradient(-45deg, rgba(42,40,34,0.07) 0 6px, transparent 6px 12px); border:1px solid var(--line); }
+
+  /* admin desktop frame */
+  .frame-wide {
+    width: 1180px; border-radius: 14px;
+    box-shadow: 0 24px 60px -26px rgba(42,40,34,0.45), 0 0 0 1px rgba(42,40,34,0.06);
+  }
+
+  /* connector arrow between guest frames */
+  .conn { align-self: center; color: var(--ink-faint); font-size: 22px; padding-top: 30px; }
+
+  /* isolate / export mode */
+  body.iso .board-head, body.iso .flow-section { display: none; }
+  body.iso .iso-stage { display: flex; }
+  .iso-stage {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    align-items: center; justify-content: center; background: #DAD3C4;
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="board">
+  <div class="board-head">
+    <span class="eyebrow">Knipsmoment · Screens Board</span>
+    <h1>Alle Frames — bereit für Figma.</h1>
+    <p>Jeder Screen als isolierter Frame in Handy-Auflösung. Lade dir die PNG-Exporte herunter und zieh sie in Figma, oder nutze dieses Board als Referenz beim Nachbauen der Komponenten.</p>
+    <span class="hint">◉ 11 Frames · Gäste-Flow · 3 Varianten · Admin · Onboarding</span>
+  </div>
+
+  <!-- ============ GÄSTE-FLOW ============ -->
+  <div class="flow-section">
+    <div class="sec-label">01 · Gäste-Flow</div>
+    <div class="sec-sub">QR scannen → knipsen → fertig</div>
+    <div class="frames-row">
+
+      <div class="artboard">
+        <div class="ab-label"><b>Welcome</b> <span class="dim">300×650</span></div>
+        <div class="frame" id="f-welcome">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen" style="inset:0;"><div class="screen-body welcome">
+            <div class="cam-illus"><div class="cam-body"></div><div class="cam-lens"></div><div class="cam-flash"></div><div class="cam-wind"></div><div class="cam-finder"></div></div>
+            <div class="kicker">Eure Einwegkamera</div>
+            <h2>Lena<span class="amp"> &amp; </span>Jonas</h2>
+            <div class="date">12 · 07 · 25</div>
+            <p class="blurb">Haltet den Tag fest, wie ihr ihn seht. 10 Bilder — mehr hat eure Filmrolle nicht. Also: gut zielen!</p>
+            <div class="count-pill"><span>◉</span> 10 Bilder frei</div>
+            <button class="btn btn-amber start-btn">Filmrolle einlegen →</button>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="conn">→</div>
+
+      <div class="artboard">
+        <div class="ab-label"><b>Sucher / Kamera</b> <span class="dim">300×650</span></div>
+        <div class="frame cam" id="f-cam">
+          <div class="statusbar on-dark"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen cam" style="inset:0;"><div class="screen-body" style="padding:0;">
+            <div class="viewfinder">
+              <div class="vf-scene vf-brackets"><i></i>[ euer moment ]</div>
+              <div class="vf-cross"></div>
+              <div class="vf-top"><span class="vf-counter">NOCH <b>7</b> BILDER</span><span class="vf-rec"><i></i> AUTO</span></div>
+              <span class="vf-date datestamp">12·07·25</span>
+              <div class="vf-strip"><div class="frame2"></div></div>
+            </div>
+            <div class="cam-controls">
+              <div class="side left"><button class="upload-btn">AUS<br>GALERIE</button></div>
+              <button class="shutter"></button>
+              <div class="side right"><span class="cam-hint">TIPP<br>HALTEN &amp;<br>RUHIG</span></div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="conn">→</div>
+
+      <div class="artboard">
+        <div class="ab-label"><b>Filmrolle voll</b> <span class="dim">300×650</span></div>
+        <div class="frame" id="f-done">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen" style="inset:0;"><div class="screen-body done">
+            <div class="seal">✦</div>
+            <h2>Deine Filmrolle<br>ist voll!</h2>
+            <p>Danke, dass du mitgeknipst hast.<br>Lena &amp; Jonas entwickeln eure<br>Bilder nach der Feier.</p>
+            <div class="roll"><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div><div class="frame3"></div></div>
+            <button class="reset">↺ Noch jemand? Neu starten</button>
+          </div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ VARIANTEN ============ -->
+  <div class="flow-section">
+    <div class="sec-label">02 · Stil-Varianten · Gäste-Screen</div>
+    <div class="sec-sub">drei Richtungen für das Knips-Erlebnis</div>
+    <div class="frames-row">
+
+      <div class="artboard">
+        <div class="ab-label"><b>A · Der Sucher</b> <span class="dim">300×650</span></div>
+        <div class="frame cam" id="f-varA">
+          <div class="statusbar on-dark"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen cam" style="inset:0;"><div class="screen-body" style="padding:0;">
+            <div class="viewfinder">
+              <div class="vf-scene vf-brackets"><i></i>[ euer moment ]</div>
+              <div class="vf-cross"></div>
+              <div class="vf-top"><span class="vf-counter">NOCH <b>7</b> BILDER</span><span class="vf-rec"><i></i> AUTO</span></div>
+              <span class="vf-date datestamp">12·07·25</span>
+              <div class="vf-strip"><div class="frame2"></div><div class="frame2"></div><div class="frame2"></div></div>
+            </div>
+            <div class="cam-controls">
+              <div class="side left"><button class="upload-btn">AUS<br>GALERIE</button></div>
+              <button class="shutter"></button>
+              <div class="side right"><span class="cam-hint">RUHIG<br>HALTEN</span></div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="artboard">
+        <div class="ab-label"><b>B · Das Polaroid</b> <span class="dim">300×650</span></div>
+        <div class="frame" id="f-varB" style="background:var(--sage-mist);">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen" style="inset:0;"><div class="screen-body" style="justify-content:center; align-items:center; gap:0;">
+            <div class="polaroid-cap" style="transform:rotate(-3deg);">
+              <div class="ph">euer moment</div>
+              <div class="pl-foot"><div class="hand">noch 7 von 10</div><div class="d">12·07·25</div></div>
+            </div>
+            <button class="btn btn-amber" style="margin-top:30px; width:170px; justify-content:center;">Auslösen</button>
+            <button class="upload-btn" style="margin-top:12px; color:var(--ink-soft); border-color:var(--line); background:transparent;">ODER AUS GALERIE</button>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="artboard">
+        <div class="ab-label"><b>C · Der Filmstreifen</b> <span class="dim">300×650</span></div>
+        <div class="frame" id="f-varC">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen" style="inset:0;"><div class="screen-body var-c">
+            <div class="vc-rail left"></div>
+            <div class="vc-rail right"></div>
+            <div class="vc-center">
+              <div class="kicker" style="font-family:var(--mono); font-size:10px; letter-spacing:0.2em; color:var(--accent-deep);">FILMROLLE · 36 ASA</div>
+              <div class="ph" style="width:170px; height:170px; margin:18px auto; border:1px solid var(--line);">euer moment</div>
+              <div class="display" style="font-size:34px; line-height:1.02;">Noch 7<br>Bilder</div>
+              <button class="btn btn-primary" style="margin-top:24px; width:190px; justify-content:center;">◉ Auslösen</button>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ ONBOARDING ============ -->
+  <div class="flow-section">
+    <div class="sec-label">03 · Onboarding · Brautpaar</div>
+    <div class="sec-sub">Event anlegen → Regeln → QR-Code</div>
+    <div class="frames-row">
+
+      <div class="artboard">
+        <div class="ab-label"><b>1 · Eckdaten</b> <span class="dim">300×650</span></div>
+        <div class="frame" id="f-onb1">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen" style="inset:0;"><div class="screen-body" style="padding-top:18px;">
+            <div class="eyebrow" style="margin-bottom:8px;">Neue Hochzeit</div>
+            <h3 class="display" style="font-size:32px; margin-bottom:22px;">Eure Eckdaten</h3>
+            <div class="field"><label>Brautpaar</label><div class="inp serif">Lena &amp; Jonas</div></div>
+            <div class="field"><label>Datum</label><div class="inp">12. Juli 2025</div></div>
+            <div class="field"><label>Location</label><div class="inp">Gutshof Ahrenberg</div></div>
+            <button class="btn btn-primary" style="margin-top:8px; width:100%; justify-content:center;">Weiter →</button>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="conn">→</div>
+
+      <div class="artboard">
+        <div class="ab-label"><b>2 · Filmrolle</b> <span class="dim">300×650</span></div>
+        <div class="frame" id="f-onb2">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen" style="inset:0;"><div class="screen-body" style="padding-top:18px;">
+            <div class="eyebrow" style="margin-bottom:8px;">Die Filmrolle</div>
+            <h3 class="display" style="font-size:32px; margin-bottom:22px;">Wie viele Bilder?</h3>
+            <div class="field">
+              <label>Bilder pro Gast</label>
+              <div class="limit-row"><span class="big">10</span><span class="u">Auslöser / Gerät</span></div>
+              <div class="slider-track"><div class="fill" style="width:62%;"></div><div class="knob" style="left:62%;"></div></div>
+            </div>
+            <div class="field" style="margin-top:22px;"><label>Aufnahme-Modus</label>
+              <div class="seg"><span class="o on">Sucher</span><span class="o">Upload</span><span class="o on">Beide</span></div>
+            </div>
+            <div class="field"><label>Galerie sofort sichtbar?</label>
+              <div class="seg"><span class="o">Ja</span><span class="o on">Erst nach Freigabe</span></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top:4px; width:100%; justify-content:center;">QR erstellen →</button>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="conn">→</div>
+
+      <div class="artboard">
+        <div class="ab-label"><b>3 · QR-Code</b> <span class="dim">300×650</span></div>
+        <div class="frame" id="f-onb3" style="background:var(--sage-mist);">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <div class="screen" style="inset:0;"><div class="screen-body" style="align-items:center; justify-content:center; text-align:center;">
+            <div class="seal" style="width:52px;height:52px;font-size:24px; background:#fff; border:1.5px solid var(--accent); color:var(--accent-deep); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--serif); margin-bottom:16px;">✦</div>
+            <h3 class="display" style="font-size:27px; line-height:1.08; margin-bottom:8px;">Eure Kamera<br>ist bereit!</h3>
+            <p style="font-size:13px; color:var(--ink-soft); margin-bottom:18px;">Auf den Tischen aufstellen —<br>Gäste scannen einfach.</p>
+            <div class="qr-box"><svg width="148" height="148" viewBox="0 0 25 25" id="qrSvg2"></svg></div>
+            <div class="datestamp" style="margin-top:14px; font-size:13px;">knipsmoment.app/l/lj25</div>
+            <div style="display:flex; gap:8px; margin-top:18px;">
+              <button class="btn btn-primary" style="padding:11px 18px; font-size:14px;">↧ PDF drucken</button>
+              <button class="btn btn-ghost" style="padding:11px 18px; font-size:14px;">Teilen</button>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ ADMIN ============ -->
+  <div class="flow-section">
+    <div class="sec-label">04 · Admin-Dashboard · Desktop</div>
+    <div class="sec-sub">sichten · freigeben · als ZIP herunterladen</div>
+    <div class="frames-row">
+      <div class="artboard">
+        <div class="ab-label"><b>Galerie &amp; Freigabe</b> <span class="dim">1180×auto</span></div>
+        <div class="frame-wide" id="f-admin">
+          <div class="browser" style="box-shadow:none; border:none;">
+            <div class="browser-bar">
+              <div class="lights"><i style="background:#E8732B"></i><i style="background:#E9B44C"></i><i style="background:#7C9173"></i></div>
+              <div class="url">knipsmoment.app / admin / lena-und-jonas</div>
+            </div>
+            <div class="admin">
+              <div class="admin-top">
+                <div class="brand"><div class="logo">✦</div><div><h3>Lena &amp; Jonas</h3><div class="sub">12·07·2025 · GUTSHOF AHRENBERG</div></div></div>
+                <button class="btn btn-amber">⛁ Alle herunterladen (ZIP)</button>
+              </div>
+              <div class="admin-stats">
+                <div class="stat"><div class="n">184</div><div class="l">Bilder gesamt</div></div>
+                <div class="stat"><div class="n pend">23</div><div class="l">Wartend</div></div>
+                <div class="stat"><div class="n">161</div><div class="l">Freigegeben</div></div>
+                <div class="stat"><div class="n">47</div><div class="l">Gäste aktiv</div></div>
+              </div>
+              <div class="admin-toolbar">
+                <div class="tabs">
+                  <span class="tab on">Alle <span class="b">184</span></span>
+                  <span class="tab">Wartend <span class="b">23</span></span>
+                  <span class="tab">Freigegeben <span class="b">161</span></span>
+                  <span class="tab">Abgelehnt <span class="b">5</span></span>
+                </div>
+                <div class="tabs"><span class="tab">↧ Sortieren: Neueste</span></div>
+              </div>
+              <div class="admin-grid" id="adminGrid2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="iso-stage" id="isoStage"></div>
+
+<script>
+/* Admin-Galerie + QR (eigenständig für dieses Board) */
+(function () {
+  const grid = document.getElementById('adminGrid2');
+  if (grid) {
+    const labels = ['erster tanz','torte','ringe','sektempfang','gäste','sonnenuntergang','kinder','blumen','rede','konfetti','tischdeko','lachen','kuss','band','auto'];
+    const pending = new Set([1,4,7]);
+    let html = '';
+    for (let i = 0; i < 10; i++) {
+      const p = pending.has(i);
+      html += `<div class="shot"><div class="ph">${labels[i]}</div><span class="badge ${p?'pend':'appr'}">${p?'wartet':'frei'}</span><span class="stamp datestamp">12·07·25</span><div class="actions"><button class="act ok">✓</button><button class="act no">✕</button><button class="act">↧</button></div></div>`;
+    }
+    grid.innerHTML = html;
+  }
+  const qr = document.getElementById('qrSvg2');
+  if (qr) {
+    const N = 25; let seed = 1337;
+    const rnd = () => (seed = (seed*1103515245+12345)&0x7fffffff)/0x7fffffff;
+    const isFinder = (x,y) => { const b=(ox,oy)=>x>=ox&&x<ox+7&&y>=oy&&y<oy+7; return b(0,0)||b(N-7,0)||b(0,N-7); };
+    let cells='';
+    for (let y=0;y<N;y++) for (let x=0;x<N;x++){ if(isFinder(x,y))continue; if(rnd()>0.55) cells+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#2A2822"/>`; }
+    const f=(ox,oy)=>`<rect x="${ox}" y="${oy}" width="7" height="7" fill="#2A2822"/><rect x="${ox+1}" y="${oy+1}" width="5" height="5" fill="#fff"/><rect x="${ox+2}" y="${oy+2}" width="3" height="3" fill="#54664C"/>`;
+    qr.innerHTML = cells + f(0,0) + f(N-7,0) + f(0,N-7);
+  }
+})();
+
+/* Export-Isolation: window.iso('f-welcome') zeigt einen Frame zentriert */
+window.iso = function (id) {
+  const stage = document.getElementById('isoStage');
+  const src = document.getElementById(id);
+  if (!src) return;
+  stage.innerHTML = '';
+  const clone = src.cloneNode(true);
+  clone.style.margin = '0';
+  clone.style.transform = 'none';
+  stage.appendChild(clone);
+  document.body.classList.add('iso');
+  // nach Layout + Font-Load echte Größe messen und einpassen
+  const fit = function () {
+    const w = clone.offsetWidth, h = clone.offsetHeight;
+    const s = Math.min((window.innerWidth - 44) / w, (window.innerHeight - 44) / h, 1.6) * 0.97;
+    clone.style.transformOrigin = 'center center';
+    clone.style.transform = 'scale(' + s + ')';
+  };
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(function(){ setTimeout(fit, 60); }); }
+  setTimeout(fit, 350);
+};
+window.unIso = function () { document.body.classList.remove('iso'); document.getElementById('isoStage').innerHTML=''; };
+</script>
+</body>
+</html>

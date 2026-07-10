@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knipsmoment — Konzept &amp; Prototyp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+<div class="grain"></div>
+
+<!-- ════════════════════════════════ HERO ════════════════════════════════ -->
+<header class="hero" data-screen-label="Hero">
+  <div class="wrap hero-grid">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="reel">●</span> Web-Einwegkamera für die Hochzeit
+      </div>
+      <h1 class="display hero-title">Knips&shy;moment</h1>
+      <p class="hero-lead">Jeder Gast bekommt eine Filmrolle mit nur <strong>10 Bildern</strong>. Kein Login, keine App — QR-Code scannen, knipsen, fertig. Das Brautpaar gibt die Fotos später frei und lädt alles als ZIP herunter.</p>
+      <div class="hero-meta">
+        <span class="hero-chip">QR statt Download</span>
+        <span class="hero-chip">10 Bilder pro Gast</span>
+        <span class="hero-chip">Admin-Freigabe</span>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-amber" href="#prototyp">Prototyp ausprobieren →</a>
+        <a class="btn btn-ghost" href="Knipsmoment Screens.html">Screens-Board (Figma) →</a>
+      </div>
+      <div class="hero-stack">PWA · Ionic + Firebase · Firestore + Storage</div>
+    </div>
+
+    <div class="hero-right">
+      <div class="filmstrip">
+        <div class="fs-perf top"></div>
+        <div class="fs-frames">
+          <div class="ph">moment 01</div>
+          <div class="ph">moment 02</div>
+          <div class="ph">moment 03</div>
+        </div>
+        <div class="fs-perf bot"></div>
+        <span class="datestamp fs-date">12·07·25</span>
+      </div>
+      <div class="tape" style="top:-14px; left:54px; transform: rotate(-7deg);"></div>
+      <div class="tape" style="bottom:-12px; right:40px; transform: rotate(5deg);"></div>
+    </div>
+  </div>
+  <div class="hero-scroll">scroll ↓</div>
+</header>
+
+<!-- ════════════════════════════════ KONZEPT ════════════════════════════════ -->
+<section id="konzept" class="band" data-screen-label="Konzept">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Das Konzept</span>
+      <h2>Die Magie der Einwegkamera — nur ohne Plastik und Wartezeit.</h2>
+      <p class="lead">Jeder kennt die Wegwerfkameras auf den Tischen. Sie machen den Tag besonders, weil jedes Bild zählt. Knipsmoment überträgt genau dieses Gefühl ins Web: limitiert, spielerisch, ohne Hürde.</p>
+    </div>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <span class="cc-num">01</span>
+        <h3>Limitiert wie echter Film</h3>
+        <p>Nur 10 Auslöser pro Gast. Das macht jedes Bild bewusst — keine 200 wahllosen Schnappschüsse, sondern echte Momente.</p>
+      </div>
+      <div class="concept-card">
+        <span class="cc-num">02</span>
+        <h3>Null Hürde für Gäste</h3>
+        <p>QR-Code am Tisch scannen, Browser öffnet sich, los geht's. Kein Store, kein Download, kein Konto — auch für Oma machbar.</p>
+      </div>
+      <div class="concept-card">
+        <span class="cc-num">03</span>
+        <h3>Das Brautpaar behält die Kontrolle</h3>
+        <p>Alle Bilder landen zuerst auf „wartet auf Freigabe". Ihr entscheidet, was in die Galerie kommt — und ladet am Ende alles herunter.</p>
+      </div>
+      <div class="concept-card">
+        <span class="cc-num">04</span>
+        <h3>Die Überraschung danach</h3>
+        <p>Wie beim Entwickeln im Fotolabor: Die Bilder gibt's erst nach der Feier. Ein gemeinsamer Blick auf den Tag aus 100 Augen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ ABLAUF ════════════════════════════════ -->
+<section class="band alt" data-screen-label="Ablauf">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Der Ablauf</span>
+      <h2>Von der Tischdeko bis zum fertigen Album.</h2>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="fs-ico">⌗</div>
+        <div class="fs-k">Gast</div>
+        <h4>QR-Code scannen</h4>
+        <p>Auf jedem Tisch liegt eine Karte mit QR-Code. Ein Scan öffnet die Webapp.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-ico">◉</div>
+        <div class="fs-k">Gast</div>
+        <h4>Knipsen</h4>
+        <p>Sucher öffnet sich. Foto machen oder aus der Galerie wählen — bis das Limit erreicht ist.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-ico">⤓</div>
+        <div class="fs-k">System</div>
+        <h4>Hochladen</h4>
+        <p>Bild wird komprimiert und als „wartend" in Firebase Storage gespeichert.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-ico">✓</div>
+        <div class="fs-k">Admin</div>
+        <h4>Freigeben</h4>
+        <p>Das Brautpaar sichtet im Dashboard, gibt frei oder löscht unpassende Bilder.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-ico">⛁</div>
+        <div class="fs-k">Admin</div>
+        <h4>Herunterladen</h4>
+        <p>Nach der Feier alle Bilder gesammelt als ZIP exportieren. Fertig.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ DESIGN-SYSTEM ════════════════════════════════ -->
+<section class="band" data-screen-label="Design-System">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Design-System</span>
+      <h2>Warmes Papier, Salbeigrün und ein oranger Datums-Stempel.</h2>
+      <p class="lead">Der Look zitiert echtes Filmmaterial: leichtes Korn, Klebeband, Sprocket-Löcher und der typische orange Datumsaufdruck von 90er-Jahre-Kameras.</p>
+    </div>
+
+    <div class="ds-grid">
+      <!-- Farben -->
+      <div class="ds-block">
+        <h4 class="ds-label">Farben</h4>
+        <div class="swatches">
+          <div class="sw"><span style="background:#F3EFE4"></span><b>Papier</b><i>#F3EFE4</i></div>
+          <div class="sw"><span style="background:#7C9173"></span><b>Salbei</b><i>#7C9173</i></div>
+          <div class="sw"><span style="background:#54664C"></span><b>Salbei tief</b><i>#54664C</i></div>
+          <div class="sw"><span style="background:#D9742E"></span><b>Film-Orange</b><i>#D9742E</i></div>
+          <div class="sw"><span style="background:#2A2822"></span><b>Tinte</b><i>#2A2822</i></div>
+        </div>
+      </div>
+
+      <!-- Type -->
+      <div class="ds-block">
+        <h4 class="ds-label">Schrift</h4>
+        <div class="type-spec">
+          <div class="ts-row">
+            <span class="ts-name">Instrument Serif</span>
+            <div class="display" style="font-size:44px; line-height:0.95;">Liebe in 10 Bildern</div>
+          </div>
+          <div class="ts-row">
+            <span class="ts-name">DM Sans</span>
+            <div style="font-size:17px;">Klare, freundliche Lauftexte für die Oberfläche.</div>
+          </div>
+          <div class="ts-row">
+            <span class="ts-name">DM Mono</span>
+            <div style="font-family:var(--mono); font-size:15px; letter-spacing:0.04em;">NOCH 07 BILDER · 12·07·25</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Texturen -->
+      <div class="ds-block ds-wide">
+        <h4 class="ds-label">Texturen &amp; Motive</h4>
+        <div class="tex-grid">
+          <div class="tex">
+            <div class="tex-demo perf-demo"></div>
+            <span>Sprocket-Perforation</span>
+          </div>
+          <div class="tex">
+            <div class="tex-demo tape-demo"><div class="tape" style="position:static; transform:rotate(-4deg);"></div></div>
+            <span>Klebeband</span>
+          </div>
+          <div class="tex">
+            <div class="tex-demo grain-demo"></div>
+            <span>Film-Korn</span>
+          </div>
+          <div class="tex">
+            <div class="tex-demo stamp-demo"><span class="datestamp" style="font-size:18px;">12·07·25</span></div>
+            <span>Datums-Stempel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ PROTOTYP ════════════════════════════════ -->
+<section id="prototyp" class="band alt" data-screen-label="Prototyp Gäste-Flow">
+  <div class="wrap proto-wrap">
+    <div class="proto-info">
+      <span class="eyebrow">Interaktiver Prototyp · Gäste-Flow</span>
+      <h2 class="proto-h">Probier's aus —<br>leg die Filmrolle ein.</h2>
+      <p class="lead">Genau das, was ein Gast auf dem Handy sieht. Tippe dich durch: Willkommen → Sucher → Auslösen (mit Blitz &amp; Zähler) → Filmrolle voll.</p>
+      <ul class="proto-steps">
+        <li><span>1</span> Begrüßung mit euren Namen &amp; Bild-Kontingent</li>
+        <li><span>2</span> Sucher mit Auslöser <em>und</em> „Aus Galerie"-Upload</li>
+        <li><span>3</span> Jeder Auslöser: Blitz, Zähler runter, Mini-Filmstreifen</li>
+        <li><span>4</span> Bei 0 Bildern: liebevoller Abschluss-Screen</li>
+      </ul>
+      <p class="proto-tip">↘ Tipp: Den großen orangenen Auslöser mehrfach drücken.</p>
+    </div>
+    <div class="proto-stage">
+      <div class="phone"><div class="phone-screen" id="proto"></div></div>
+      <div class="tape" style="top:-12px; right:60px; transform: rotate(6deg);"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ VARIANTEN ════════════════════════════════ -->
+<section class="band" data-screen-label="Stil-Varianten">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Stil-Varianten · Gäste-Screen</span>
+      <h2>Drei Richtungen für das Knips-Erlebnis.</h2>
+      <p class="lead">Derselbe Flow, drei Stimmungen. Welche passt am besten zu eurer Hochzeit?</p>
+    </div>
+    <div class="variants">
+
+      <!-- Variante A: Sucher -->
+      <div class="variant">
+        <div class="phone" style="width:248px; height:524px;">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="screen active cam">
+              <div class="screen-body" style="padding:0;">
+                <div class="statusbar on-dark"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+                <div class="viewfinder" style="margin:6px;">
+                  <div class="vf-scene vf-brackets"><i></i>[ euer moment ]</div>
+                  <div class="vf-cross"></div>
+                  <div class="vf-top"><span class="vf-counter">NOCH <b>07</b> BILDER</span><span class="vf-rec"><i></i> AUTO</span></div>
+                  <span class="vf-date datestamp">12·07·25</span>
+                  <div class="vf-strip"><div class="frame" style="animation:none"></div><div class="frame" style="animation:none"></div><div class="frame" style="animation:none"></div></div>
+                </div>
+                <div class="cam-controls" style="height:96px;">
+                  <div class="side left"><button class="upload-btn">AUS<br>GALERIE</button></div>
+                  <button class="shutter" style="width:62px;height:62px;"></button>
+                  <div class="side right"><span class="cam-hint">RUHIG<br>HALTEN</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v-cap">
+          <div class="v-num">VARIANTE A</div>
+          <h4>Der Sucher</h4>
+          <p>Echte Kamera-Haptik: schwarzer Sucher, oranger Auslöser, Restbild-Zähler. Am nächsten am Einwegkamera-Gefühl.</p>
+        </div>
+      </div>
+
+      <!-- Variante B: Polaroid -->
+      <div class="variant">
+        <div class="phone" style="width:248px; height:524px;">
+          <div class="phone-screen" style="background:var(--sage-mist);">
+            <div class="phone-notch"></div>
+            <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="screen-body" style="justify-content:center; align-items:center; gap:0;">
+              <div class="polaroid-cap" style="transform:rotate(-3deg);">
+                <div class="ph">euer moment</div>
+                <div class="pl-foot">
+                  <div class="hand">noch 7 von 10</div>
+                  <div class="d">12·07·25</div>
+                </div>
+              </div>
+              <button class="btn btn-amber" style="margin-top:30px; width:160px; justify-content:center;">Auslösen</button>
+              <button class="upload-btn" style="margin-top:12px; color:var(--ink-soft); border-color:var(--line); background:transparent;">ODER AUS GALERIE</button>
+            </div>
+          </div>
+        </div>
+        <div class="v-cap">
+          <div class="v-num">VARIANTE B</div>
+          <h4>Das Polaroid</h4>
+          <p>Jeder Schnappschuss „fällt" als Sofortbild heraus. Verspielt, taktil, mit handschriftlichem Zähler. Sehr warm.</p>
+        </div>
+      </div>
+
+      <!-- Variante C: Filmstreifen -->
+      <div class="variant">
+        <div class="phone" style="width:248px; height:524px;">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="screen-body var-c">
+              <div class="vc-rail left"></div>
+              <div class="vc-rail right"></div>
+              <div class="vc-center">
+                <div class="kicker" style="font-family:var(--mono); font-size:10px; letter-spacing:0.2em; color:var(--accent-deep);">FILMROLLE · 36 ASA</div>
+                <div class="ph" style="width:150px; height:150px; margin:18px auto; border:1px solid var(--line);">euer moment</div>
+                <div class="display" style="font-size:30px; line-height:0.95;">Noch 7<br>Bilder</div>
+                <button class="btn btn-primary" style="margin-top:22px; width:170px; justify-content:center;">◉ Auslösen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v-cap">
+          <div class="v-num">VARIANTE C</div>
+          <h4>Der Filmstreifen</h4>
+          <p>Perforation rahmt den ganzen Screen, Salbei steht im Vordergrund. Reduziert, grafisch, am elegantesten.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ ADMIN ════════════════════════════════ -->
+<section class="band alt" data-screen-label="Admin-Dashboard">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Admin-Dashboard · für das Brautpaar</span>
+      <h2>Sichten, freigeben, herunterladen — an einem Ort.</h2>
+      <p class="lead">Nach der Feier öffnet ihr das Dashboard, geht die wartenden Bilder durch und exportiert die Galerie als ZIP.</p>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="lights"><i style="background:#E8732B"></i><i style="background:#E9B44C"></i><i style="background:#7C9173"></i></div>
+        <div class="url">knipsmoment.app / admin / lena-und-jonas</div>
+      </div>
+      <div class="admin">
+        <div class="admin-top">
+          <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+              <h3>Lena &amp; Jonas</h3>
+              <div class="sub">12·07·2025 · GUTSHOF AHRENBERG</div>
+            </div>
+          </div>
+          <button class="btn btn-amber">⛁ Alle herunterladen (ZIP)</button>
+        </div>
+
+        <div class="admin-stats">
+          <div class="stat"><div class="n">184</div><div class="l">Bilder gesamt</div></div>
+          <div class="stat"><div class="n pend">23</div><div class="l">Wartend</div></div>
+          <div class="stat"><div class="n">161</div><div class="l">Freigegeben</div></div>
+          <div class="stat"><div class="n">47</div><div class="l">Gäste aktiv</div></div>
+        </div>
+
+        <div class="admin-toolbar">
+          <div class="tabs">
+            <span class="tab on">Alle <span class="b">184</span></span>
+            <span class="tab">Wartend <span class="b">23</span></span>
+            <span class="tab">Freigegeben <span class="b">161</span></span>
+            <span class="tab">Abgelehnt <span class="b">5</span></span>
+          </div>
+          <div class="tabs"><span class="tab">↧ Sortieren: Neueste</span></div>
+        </div>
+
+        <div class="admin-grid" id="adminGrid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ ONBOARDING ════════════════════════════════ -->
+<section class="band" data-screen-label="Onboarding Brautpaar">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Onboarding · Event anlegen</span>
+      <h2>In drei Schritten startklar.</h2>
+      <p class="lead">Das Brautpaar richtet die Kamera einmal ein — Namen, Limit, fertiger QR-Code zum Ausdrucken.</p>
+    </div>
+    <div class="onb-row">
+
+      <!-- Schritt 1 -->
+      <div class="onb-step">
+        <div class="step-tag">SCHRITT <b>1</b> · EVENT</div>
+        <div class="phone" style="width:250px; height:528px;">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="screen-body" style="padding-top:18px;">
+              <div class="eyebrow" style="margin-bottom:8px;">Neue Hochzeit</div>
+              <h3 class="display" style="font-size:30px; margin-bottom:20px;">Eure Eckdaten</h3>
+              <div class="field"><label>Brautpaar</label><div class="inp serif">Lena &amp; Jonas</div></div>
+              <div class="field"><label>Datum</label><div class="inp">12. Juli 2025</div></div>
+              <div class="field"><label>Location</label><div class="inp">Gutshof Ahrenberg</div></div>
+              <button class="btn btn-primary" style="margin-top:8px; width:100%; justify-content:center;">Weiter →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schritt 2 -->
+      <div class="onb-step">
+        <div class="step-tag">SCHRITT <b>2</b> · REGELN</div>
+        <div class="phone" style="width:250px; height:528px;">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="screen-body" style="padding-top:18px;">
+              <div class="eyebrow" style="margin-bottom:8px;">Die Filmrolle</div>
+              <h3 class="display" style="font-size:30px; margin-bottom:20px;">Wie viele Bilder?</h3>
+              <div class="field">
+                <label>Bilder pro Gast</label>
+                <div class="limit-row"><span class="big">10</span><span class="u">Auslöser / Gerät</span></div>
+                <div class="slider-track"><div class="fill" style="width:62%;"></div><div class="knob" style="left:62%;"></div></div>
+              </div>
+              <div class="field" style="margin-top:22px;"><label>Aufnahme-Modus</label>
+                <div class="seg"><span class="o on">Sucher</span><span class="o">Upload</span><span class="o on">Beide</span></div>
+              </div>
+              <div class="field"><label>Galerie sofort sichtbar?</label>
+                <div class="seg"><span class="o">Ja</span><span class="o on">Erst nach Freigabe</span></div>
+              </div>
+              <button class="btn btn-primary" style="margin-top:4px; width:100%; justify-content:center;">QR erstellen →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schritt 3 -->
+      <div class="onb-step">
+        <div class="step-tag">SCHRITT <b>3</b> · QR-CODE</div>
+        <div class="phone" style="width:250px; height:528px;">
+          <div class="phone-screen" style="background:var(--sage-mist);">
+            <div class="phone-notch"></div>
+            <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="screen-body" style="align-items:center; justify-content:center; text-align:center;">
+              <div class="seal" style="width:48px;height:48px;font-size:22px; background:#fff; border:1.5px solid var(--accent); color:var(--accent-deep); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--serif); margin-bottom:14px;">✦</div>
+              <h3 class="display" style="font-size:25px; line-height:1.08; margin-bottom:8px;">Eure Kamera<br>ist bereit!</h3>
+              <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">Auf den Tischen aufstellen —<br>Gäste scannen einfach.</p>
+              <div class="qr-box" style="padding:13px;"><svg class="qr-svg" width="128" height="128" viewBox="0 0 25 25" id="qrSvg"></svg></div>
+              <div class="datestamp" style="margin-top:12px; font-size:12px;">knipsmoment.app/l/lj25</div>
+              <div style="display:flex; gap:8px; margin-top:16px;">
+                <button class="btn btn-primary" style="padding:10px 16px; font-size:13px;">↧ PDF drucken</button>
+                <button class="btn btn-ghost" style="padding:10px 16px; font-size:13px;">Teilen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ TECH ════════════════════════════════ -->
+<section class="band alt tech" data-screen-label="Architektur">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Architektur · wie aus dem Markdown</span>
+      <h2>Klein genug für eine Person.</h2>
+      <p class="lead">Ionic-PWA als Frontend, Firebase als Backend. Geschätzter MVP: 20–40 Stunden, mit sauberem Admin &amp; Tests eher 40–80.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-col">
+        <h4>Frontend</h4>
+        <ul><li>Ionic PWA (Gäste + Admin)</li><li>Kamera via <code>&lt;input capture&gt;</code></li><li>Bildkompression vor Upload</li><li>Firebase Hosting</li></ul>
+      </div>
+      <div class="tech-col">
+        <h4>Firestore</h4>
+        <ul><li><code>events</code> · Datum, Limit, Einstellungen</li><li><code>photos</code> · URL, Status, Zeit, Gast</li><li>Status: pending / approved / rejected</li></ul>
+      </div>
+      <div class="tech-col">
+        <h4>Storage &amp; Auth</h4>
+        <ul><li><code>events/{id}/photos/{id}.jpg</code></li><li>Security Rules pro Event</li><li>Admin-Login über Firebase Auth</li><li>ZIP-Export aller Bilder</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div class="display" style="font-size:30px;">Knipsmoment</div>
+    <p>Konzept &amp; Prototyp · Hochzeits-Einwegkamera als Web-App</p>
+  </div>
+</footer>
+
+<script src="prototype.js"></script>
+<script src="page.js"></script>
+</body>
+</html>
