@@ -41,4 +41,7 @@
     <!-- Capacitor-Camera-Plugin: Galerie-Zugriff (Kamera läuft über System-Intent) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- Live-Sucher im WebView (getUserMedia) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 </manifest>

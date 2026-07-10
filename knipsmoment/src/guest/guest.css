@@ -153,6 +153,24 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
+/* Live-Sucher: Kamerabild unter dem Overlay */
+.vf-video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+.vf-video.on { opacity: 1; }
+
+/* Overlay-Rahmen über dem Live-Bild */
+.vf-frame {
+  position: absolute; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
 /* Ecken-Klammern (4 weiße L-Formen) */
 .vf-brackets::before, .vf-brackets::after,
 .vf-brackets i::before, .vf-brackets i::after {
@@ -167,6 +185,8 @@
 .vf-cross {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
   width: 26px; height: 26px;
+  z-index: 2;
+  pointer-events: none;
 }
 .vf-cross::before, .vf-cross::after {
   content: ""; position: absolute; background: rgba(255,255,255,0.55);

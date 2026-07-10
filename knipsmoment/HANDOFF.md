@@ -46,9 +46,13 @@ Firebase-Projekt `knipsmoment` verifiziert:
 
 - **Capacitor ist integriert** (Prüfungsanforderung): `capacitor.config.ts`
   (appId `de.knipsmoment.app`, androidScheme https), Android-Projekt unter
-  `android/`, Kamera nativ über `@capacitor/camera` (`nativePhoto()` in
-  `src/guest/CameraScreen.tsx`), Web-Fallback bleibt `<input capture>`.
-  Workflow: `npm run build` → `npx cap sync android` → Android Studio/gradlew.
+  `android/`. Workflow: `npm run build` → `npx cap sync android` → gradlew.
+- **Live-Sucher**: Der Sucher zeigt die Rückkamera live (`getUserMedia`,
+  `<video>` unter dem Overlay), der Auslöser friert einen Frame per Canvas ein.
+  Kaskade bei Nichtverfügbarkeit (Berechtigung/kein Secure Context/keine
+  Kamera): Capacitor-Camera-Plugin (nativ) → `<input capture>` (Web).
+  Stream startet nur bei aktivem Cam-Screen und wird beim Verlassen gestoppt.
+  Android braucht dafür die CAMERA-Permission (Manifest, bereits gesetzt).
 
 ## Offene Aufgaben (in dieser Reihenfolge)
 

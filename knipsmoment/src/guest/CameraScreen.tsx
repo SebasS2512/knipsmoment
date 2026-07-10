@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { Capacitor } from '@capacitor/core'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import type { CaptureMode } from '../types/models'
@@ -32,10 +32,14 @@ async function nativePhoto(source: CameraSource): Promise<File | null> {
 
 /**
  * Screen B — Sucher / Kamera (§4.1, `02-gast-sucher.png`).
- * Auslöser öffnet die Geräte-Kamera (`<input capture>`), „AUS GALERIE" den
- * Datei-Picker. Beides verbraucht ein Bild (§5: Upload = Auslösen).
+ * Der Sucher zeigt ein Live-Bild der Rückkamera (getUserMedia) direkt unter
+ * dem Overlay; der Auslöser friert einen Video-Frame ein. Wo kein Live-Stream
+ * möglich ist (Berechtigung verweigert, kein Secure Context, keine Kamera),
+ * fällt der Auslöser auf Capacitor-Camera bzw. `<input capture>` zurück.
+ * „AUS GALERIE" öffnet den Picker. Beides verbraucht ein Bild (§5).
  */
 export function CameraScreen({
+  active,
   limit,
   taken,
   dateLabel,
@@ -45,6 +49,7 @@ export function CameraScreen({
   onPhoto,
   onRetryUpload,
 }: {
+  active: boolean
   limit: number
   taken: number
   dateLabel: string
@@ -56,6 +61,9 @@ export function CameraScreen({
 }) {
   const cameraInput = useRef<HTMLInputElement>(null)
   const galleryInput = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
+  const [live, setLive] = useState(false)
   const [flashKey, setFlashKey] = useState(0)
   const [toast, setToast] = useState<{ text: string; visible: boolean }>({
     text: '',
@@ -65,6 +73,45 @@ export function CameraScreen({
 
   const remaining = limit - taken
   const online = useOnline()
+
+  // Live-Sucher: Rückkamera nur starten, solange dieser Screen aktiv ist,
+  // und beim Verlassen wieder freigeben (Kamera-LED aus).
+  useEffect(() => {
+    if (!active) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const stream = await navigator.mediaDevices?.getUserMedia({
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+          audio: false,
+        })
+        if (!stream) return
+        if (cancelled) {
+          stream.getTracks().forEach((t) => t.stop())
+          return
+        }
+        streamRef.current = stream
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+          await videoRef.current.play().catch(() => {})
+        }
+        setLive(true)
+      } catch {
+        // Berechtigung verweigert / keine Kamera / kein Secure Context →
+        // Sucher bleibt Platzhalter, Auslöser nutzt den Fallback-Pfad
+      }
+    })()
+    return () => {
+      cancelled = true
+      streamRef.current?.getTracks().forEach((t) => t.stop())
+      streamRef.current = null
+      setLive(false)
+    }
+  }, [active])
 
   function acceptPhoto(file: File) {
     if (remaining <= 0) return
@@ -87,8 +134,27 @@ export function CameraScreen({
     if (file) acceptPhoto(file)
   }
 
-  // Nativ (Capacitor): Camera-Plugin. Web: verstecktes <input capture>/<input>.
+  /** Frame aus dem Live-Stream einfrieren */
+  async function snapFromStream(): Promise<File | null> {
+    const video = videoRef.current
+    if (!video || video.videoWidth === 0) return null
+    const canvas = document.createElement('canvas')
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    canvas.getContext('2d')?.drawImage(video, 0, 0)
+    const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, 'image/jpeg', 0.92))
+    return blob ? new File([blob], `knips-${Date.now()}.jpg`, { type: 'image/jpeg' }) : null
+  }
+
+  // Reihenfolge Auslöser: Live-Stream → Capacitor-Plugin (nativ) → <input capture>
   async function capture(source: 'camera' | 'gallery') {
+    if (source === 'camera' && live) {
+      const file = await snapFromStream()
+      if (file) {
+        acceptPhoto(file)
+        return
+      }
+    }
     if (Capacitor.isNativePlatform()) {
       const file = await nativePhoto(
         source === 'camera' ? CameraSource.Camera : CameraSource.Photos,
@@ -110,8 +176,16 @@ export function CameraScreen({
   return (
     <div className="screen-body">
       <div className="viewfinder">
-        <div className="vf-scene vf-brackets">
-          <i />[ euer moment ]
+        <div className="vf-scene">[ euer moment ]</div>
+        <video
+          ref={videoRef}
+          className={`vf-video ${live ? 'on' : ''}`}
+          autoPlay
+          playsInline
+          muted
+        />
+        <div className="vf-frame vf-brackets" aria-hidden="true">
+          <i />
         </div>
         <div className="vf-cross" aria-hidden="true" />
         <div className="vf-top">

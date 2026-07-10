@@ -75,6 +75,7 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
       </div>
       <div className={`screen cam ${screen === 'cam' ? 'active' : ''}`}>
         <CameraScreen
+          active={screen === 'cam'}
           limit={event.photoLimit}
           taken={takenCount}
           dateLabel={event.dateLabel}
