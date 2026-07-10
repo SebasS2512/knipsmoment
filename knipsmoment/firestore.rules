@@ -1,0 +1,55 @@
+rules_version = '2';
+
+// KNIPSMOMENT — Firestore Security Rules (§6/§8 des Handoffs)
+// Gäste: anonym, dürfen nur Fotos als 'pending' anlegen.
+// Admin (Brautpaar): voller Zugriff auf das eigene Event.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    match /events/{eventId} {
+      // Gäste brauchen Event-Daten (Namen, Datum, Limit) über den Slug — öffentlich lesbar
+      allow read: if true;
+
+      allow create: if isSignedIn()
+        && request.resource.data.adminUid == request.auth.uid
+        && request.resource.data.photoLimit is int
+        && request.resource.data.photoLimit >= 3
+        && request.resource.data.photoLimit <= 15
+        && request.resource.data.captureMode in ['finder', 'upload', 'both']
+        && request.resource.data.galleryVisible in ['immediate', 'after_approval']
+        && request.resource.data.slug is string
+        && request.resource.data.slug.size() >= 3;
+
+      allow update, delete: if isSignedIn()
+        && resource.data.adminUid == request.auth.uid;
+
+      match /photos/{photoId} {
+        function eventData() {
+          return get(/databases/$(database)/documents/events/$(eventId)).data;
+        }
+        function isEventAdmin() {
+          return isSignedIn() && eventData().adminUid == request.auth.uid;
+        }
+
+        // Gäste laden anonym hoch — Status ist immer 'pending'.
+        // Hinweis (§8): das Foto-Limit ist ohne Login nie hart durchsetzbar;
+        // guestSessionId dient der weichen Kontingent-Prüfung. Nicht überentwickeln.
+        allow create: if request.resource.data.status == 'pending'
+          && request.resource.data.guestSessionId is string
+          && request.resource.data.guestSessionId.size() >= 8
+          && request.resource.data.storagePath is string
+          && request.resource.data.url is string
+          && request.resource.data.createdAt == request.time;
+
+        // Sichten, Freigeben (pending→approved), Ablehnen, Löschen: nur Brautpaar
+        allow read, delete: if isEventAdmin();
+        allow update: if isEventAdmin()
+          && request.resource.data.status in ['pending', 'approved', 'rejected'];
+      }
+    }
+  }
+}
