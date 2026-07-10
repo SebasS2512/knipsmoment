@@ -1,0 +1,19 @@
+{
+  "name": "Knipsmoment — Eure Einwegkamera",
+  "short_name": "Knipsmoment",
+  "description": "Die digitale Einwegkamera für eure Hochzeit. QR scannen, knipsen, fertig.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F3EFE4",
+  "theme_color": "#F3EFE4",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

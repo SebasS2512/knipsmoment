@@ -1,0 +1,39 @@
+/* ============================================================
+   KNIPSMOMENT — Design-Tokens (§3 des Handoffs)
+   Warmes Creme + Salbeigrün · analoger Retro-Filmlook
+   ============================================================ */
+
+:root {
+  /* — Palette — */
+  --paper:      #F3EFE4;
+  --paper-2:    #ECE5D5;
+  --paper-3:    #E3DAC6;
+  --ink:        #2A2822;
+  --ink-soft:   #6A6457;
+  --ink-faint:  #9A9384;
+
+  --sage:       #7C9173;
+  --sage-deep:  #54664C;
+  --sage-pale:  #D9E1CF;
+  --sage-mist:  #E7ECDD;
+
+  --amber:      #D9742E;   /* Film-Orange — Auslöser, Datums-Stempel */
+  --amber-soft: #E9954E;
+  --amber-glow: #F4B26A;
+
+  --line:       rgba(42, 40, 34, 0.13);
+  --line-2:     rgba(42, 40, 34, 0.07);
+  --shadow:     rgba(42, 40, 34, 0.18);
+
+  --cam-bg:     #14130f;   /* Sucher-Screen-Hintergrund */
+
+  /* — Type — */
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans:  "DM Sans", system-ui, sans-serif;
+  --mono:  "DM Mono", "Courier New", monospace;
+
+  /* — aktueller Akzent (Theme) — */
+  --accent:      var(--sage);
+  --accent-deep: var(--sage-deep);
+  --accent-pale: var(--sage-pale);
+}
