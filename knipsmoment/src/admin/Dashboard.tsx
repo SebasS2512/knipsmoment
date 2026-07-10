@@ -10,7 +10,8 @@ import {
   updateDoc,
   type Timestamp,
 } from 'firebase/firestore'
-import { deleteObject, ref } from 'firebase/storage'
+import { deleteObject, getBlob, ref } from 'firebase/storage'
+import JSZip from 'jszip'
 import { auth, db, storage } from '../lib/firebase'
 import type { PhotoStatus } from '../types/models'
 import type { AdminEvent } from './AdminApp'
@@ -27,6 +28,12 @@ type AdminPhoto = {
 type Tab = 'all' | PhotoStatus
 type Sort = 'newest' | 'oldest'
 
+type ZipState = {
+  running: boolean
+  done: number
+  total: number
+  failed: number
+}
 
 const TABS: { key: Tab; label: string }[] = [
   { key: 'all', label: 'Alle' },
@@ -61,6 +68,7 @@ export function Dashboard({ event }: { event: AdminEvent }) {
   const [photos, setPhotos] = useState<AdminPhoto[]>([])
   const [tab, setTab] = useState<Tab>('all')
   const [sort, setSort] = useState<Sort>('newest')
+  const [zip, setZip] = useState<ZipState | null>(null)
 
   useEffect(() => {
     const q = query(
@@ -119,11 +127,50 @@ export function Dashboard({ event }: { event: AdminEvent }) {
     }
   }
 
+  // Download über das SDK (getBlob) statt fetch(url): die tokenisierten
+  // Download-URLs der neuen *.firebasestorage.app-Buckets senden keine
+  // CORS-Header für programmatische GETs; der SDK-Weg ist preflighted + auth'd.
+  function photoBlob(p: AdminPhoto): Promise<Blob> {
+    return getBlob(ref(storage!, p.storagePath))
+  }
+
   async function download(p: AdminPhoto) {
-    const blob = await fetch(p.url).then((r) => r.blob())
+    const blob = await photoBlob(p)
     saveBlob(blob, `knipsmoment-${stamp(p.createdAt) || 'bild'}-${p.id.slice(0, 6)}.jpg`)
   }
 
+  /**
+   * ZIP-Export (Schritt 7): bündelt die Bilder des aktiven Tabs clientseitig
+   * (§5: „alle oder gefilterte"). Einzelne Fehlschläge brechen nicht ab —
+   * am Ende wird die Anzahl gemeldet.
+   */
+  async function exportZip() {
+    if (zip?.running || visible.length === 0) return
+    const list = visible
+    setZip({ running: true, done: 0, total: list.length, failed: 0 })
+
+    const bundle = new JSZip()
+    let failed = 0
+    for (let i = 0; i < list.length; i++) {
+      const p = list[i]
+      try {
+        const name = `knipsmoment-${String(i + 1).padStart(3, '0')}-${
+          stamp(p.createdAt).replace(/·/g, '-') || 'bild'
+        }-${p.id.slice(0, 6)}.jpg`
+        bundle.file(name, await photoBlob(p))
+      } catch {
+        failed++
+      }
+      setZip({ running: true, done: i + 1, total: list.length, failed })
+    }
+
+    if (failed < list.length) {
+      const blob = await bundle.generateAsync({ type: 'blob' })
+      saveBlob(blob, `knipsmoment-${event.id}${tab === 'all' ? '' : `-${tab}`}.zip`)
+    }
+    setZip({ running: false, done: list.length, total: list.length, failed })
+    window.setTimeout(() => setZip(null), 5000)
+  }
 
   return (
     <div className="admin">
@@ -141,8 +188,23 @@ export function Dashboard({ event }: { event: AdminEvent }) {
           <button type="button" className="signout" onClick={() => signOut(auth!)}>
             Abmelden
           </button>
-          <button type="button" className="btn btn-amber" disabled title="ZIP-Export kommt in Schritt 7">
-            ⛁ Alle herunterladen (ZIP)
+          {zip && !zip.running && (
+            <span className="zip-status" role="status">
+              {zip.failed === 0
+                ? 'ZIP fertig ✓'
+                : `⚠ ${zip.failed} von ${zip.total} fehlgeschlagen`}
+            </span>
+          )}
+          <button
+            type="button"
+            className="btn btn-amber"
+            disabled={visible.length === 0 || zip?.running}
+            title={visible.length === 0 ? 'Keine Bilder im aktuellen Filter' : undefined}
+            onClick={() => void exportZip()}
+          >
+            {zip?.running
+              ? `↧ Packe ${zip.done}/${zip.total} …`
+              : `⛁ ${tab === 'all' ? 'Alle' : TABS.find((t) => t.key === tab)?.label} herunterladen (ZIP)`}
           </button>
         </div>
       </header>
