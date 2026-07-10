@@ -1,0 +1,309 @@
+/* ============================================================
+   KNIPSMOMENT — Gäste-Flow (Welcome → Sucher → Done)
+   Mobile-first Vollbild; Maße aus §4.1 / components.css
+   ============================================================ */
+
+.guest-app {
+  position: relative;
+  height: 100dvh;
+  max-width: 430px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--paper);
+}
+.guest-app[data-screen='cam'] { background: var(--cam-bg); }
+
+/* Screens gestapelt, Crossfade wie im Prototyp */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.screen.active { opacity: 1; pointer-events: auto; }
+
+.screen-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: calc(8px + env(safe-area-inset-top)) 26px calc(30px + env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+/* ——————————————— SCREEN A · WELCOME ——— */
+.welcome {
+  text-align: center;
+  justify-content: center;
+  gap: 4px;
+}
+.welcome .kicker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+.welcome h1 {
+  font-family: var(--serif);
+  font-size: 46px;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 14px 0 6px;
+}
+.welcome .amp { color: var(--accent-deep); font-style: italic; }
+.welcome .date {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  letter-spacing: 0.1em;
+}
+.welcome .blurb {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  margin: 20px 4px 0;
+  text-wrap: pretty;
+}
+.welcome .count-pill {
+  margin: 22px auto 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--accent-pale);
+  color: var(--accent-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+.welcome .start-btn { margin-top: 26px; align-self: center; }
+
+/* Mini-Einwegkamera (reine CSS-Formen, 132×86) */
+.cam-illus { width: 132px; height: 86px; margin: 6px auto 4px; position: relative; }
+.cam-body {
+  position: absolute; inset: 0;
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+}
+.cam-lens {
+  position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
+  width: 42px; height: 42px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #b9c3ae, var(--sage-deep) 72%);
+  border: 3px solid var(--ink);
+}
+.cam-flash {
+  position: absolute; right: 16px; top: 14px;
+  width: 22px; height: 16px; border-radius: 3px;
+  background: var(--amber-glow); border: 2px solid var(--ink);
+}
+.cam-finder {
+  position: absolute; right: 18px; bottom: 14px;
+  width: 18px; height: 13px; border-radius: 2px;
+  background: var(--paper); border: 2px solid var(--ink);
+}
+.cam-wind {
+  position: absolute; right: 46px; top: 13px;
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--ink);
+}
+
+/* ——————————————— SCREEN B · SUCHER / KAMERA ——— */
+.cam { background: var(--cam-bg); color: #fff; }
+.cam .screen-body {
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+.viewfinder {
+  position: relative;
+  flex: 1;
+  margin: 6px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #20201a;
+}
+.vf-scene {
+  position: absolute; inset: 0;
+  background-color: #2b2b22;
+  background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.035) 0 10px, transparent 10px 20px);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.4);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+/* Ecken-Klammern (4 weiße L-Formen) */
+.vf-brackets::before, .vf-brackets::after,
+.vf-brackets i::before, .vf-brackets i::after {
+  content: ""; position: absolute; width: 22px; height: 22px;
+  border: 2px solid rgba(255,255,255,0.6);
+}
+.vf-brackets::before { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+.vf-brackets::after  { top: 16px; right: 16px; border-left: none; border-bottom: none; }
+.vf-brackets i::before { bottom: 16px; left: 16px; border-right: none; border-top: none; }
+.vf-brackets i::after  { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+/* Fadenkreuz */
+.vf-cross {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 26px; height: 26px;
+}
+.vf-cross::before, .vf-cross::after {
+  content: ""; position: absolute; background: rgba(255,255,255,0.55);
+}
+.vf-cross::before { left: 50%; top: 0; width: 1.5px; height: 100%; transform: translateX(-50%); }
+.vf-cross::after  { top: 50%; left: 0; height: 1.5px; width: 100%; transform: translateY(-50%); }
+
+.vf-top {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; z-index: 5;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+}
+.vf-counter { color: #fff; }
+.vf-counter b { color: var(--amber-glow); font-weight: 500; }
+.vf-rec { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.7); }
+.vf-rec i { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); display: inline-block; }
+.vf-date {
+  position: absolute; right: 16px; bottom: 14px; z-index: 5;
+  font-size: 15px;
+}
+.vf-flash {
+  position: absolute; inset: 0;
+  background: #fff; opacity: 0;
+  pointer-events: none; z-index: 20;
+}
+.vf-flash.fire { animation: flash 0.42s ease; }
+@keyframes flash { 0% { opacity: 0 } 12% { opacity: 0.95 } 100% { opacity: 0 } }
+
+/* Upload-Zustand im Sucher: sichern läuft / Fehler mit Retry (§8) */
+.vf-upload {
+  position: absolute; left: 12px; bottom: 44px; z-index: 7;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.65);
+  background: rgba(20,19,15,0.7);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.vf-upload.error {
+  color: #fff;
+  background: var(--amber);
+  border-color: transparent;
+  cursor: pointer;
+}
+
+/* Mini-Filmstreifen der gemachten Bilder */
+.vf-strip {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; gap: 5px; padding: 8px 12px; z-index: 6;
+  overflow: hidden;
+}
+.vf-strip .frame {
+  width: 30px; height: 22px; border-radius: 2px; flex: none;
+  background-color: var(--paper-3);
+  background-image: repeating-linear-gradient(-45deg, rgba(42,40,34,0.08) 0 5px, transparent 5px 10px);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255,255,255,0.25);
+  animation: pop 0.35s ease;
+}
+.vf-strip .frame.static { animation: none; }
+@keyframes pop { from { transform: scale(0.3); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+
+/* Kontroll-Leiste: 3-Spalten-Grid, 116px hoch */
+.cam-controls {
+  flex: none; height: 116px;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding: 0 24px;
+}
+.cam-controls .side { display: flex; flex-direction: column; gap: 4px; }
+.cam-controls .side.left { align-items: flex-start; }
+.cam-controls .side.right { align-items: flex-end; }
+.upload-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+  padding: 9px 12px; min-height: 44px; min-width: 44px;
+  border-radius: 8px; cursor: pointer; text-align: center;
+}
+.upload-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.shutter {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: var(--amber);
+  border: 5px solid #fff;
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.18), 0 6px 18px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.shutter:active { transform: scale(0.92); }
+.shutter:disabled { background: #555; cursor: not-allowed; }
+.cam-hint {
+  color: rgba(255,255,255,0.5);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  text-align: right;
+}
+
+/* Toast „Bild n von N gesichert" */
+.cam-toast {
+  position: absolute; top: 54px; left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: rgba(20,19,15,0.9); color: #fff;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
+  padding: 7px 14px; border-radius: 999px; z-index: 25;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.cam-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ——————————————— SCREEN C · DONE ——— */
+.done { justify-content: center; text-align: center; gap: 2px; }
+.done .seal {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 18px;
+  background: var(--accent-pale); color: var(--accent-deep);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 30px;
+  border: 1.5px solid var(--accent);
+}
+.done h2 {
+  font-family: var(--serif);
+  font-size: 34px; line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+.done p { font-size: 14px; color: var(--ink-soft); text-wrap: pretty; }
+.done .roll {
+  display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+  margin: 24px 0 8px;
+}
+.done .roll .frame {
+  width: 40px; height: 30px; border-radius: 2px;
+  background-color: var(--paper-3);
+  background-image: repeating-linear-gradient(-45deg, rgba(42,40,34,0.07) 0 6px, transparent 6px 12px);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--line);
+}
+.done-upload {
+  margin: 6px auto 0;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+button.done-upload.error {
+  background: var(--amber); color: #fff;
+  border: none; border-radius: 999px; cursor: pointer;
+  padding: 9px 16px; min-height: 44px;
+  max-width: 260px;
+}
+.done .reset {
+  margin-top: 18px; min-height: 44px;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-decoration: underline; text-underline-offset: 3px;
+}
