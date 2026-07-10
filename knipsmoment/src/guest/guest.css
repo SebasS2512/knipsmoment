@@ -79,7 +79,25 @@
   font-size: 12px;
   letter-spacing: 0.08em;
 }
-.welcome .start-btn { margin-top: 26px; align-self: center; }
+.welcome .guest-name {
+  margin: 18px auto 0;
+  width: 210px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 4px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+.welcome .guest-name::placeholder { color: var(--ink-faint); }
+.welcome .guest-name:focus {
+  outline: none;
+  border-bottom-color: var(--accent-deep);
+}
+.welcome .start-btn { margin-top: 22px; align-self: center; }
 
 /* Mini-Einwegkamera (reine CSS-Formen, 132×86) */
 .cam-illus { width: 132px; height: 86px; margin: 6px auto 4px; position: relative; }

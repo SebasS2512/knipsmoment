@@ -1,7 +1,6 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app'
 import { getFirestore, type Firestore } from 'firebase/firestore'
 import { getStorage, type FirebaseStorage } from 'firebase/storage'
-import { getAuth, type Auth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -18,17 +17,15 @@ export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey)
 let app: FirebaseApp | undefined
 let db: Firestore | undefined
 let storage: FirebaseStorage | undefined
-let auth: Auth | undefined
 
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig)
   db = getFirestore(app)
   storage = getStorage(app)
-  auth = getAuth(app)
   // SDK-interne Retries kürzer halten, damit die Fehler-/Retry-UI der
   // Upload-Queue bei schlechtem Empfang zeitnah greift (§8)
   storage.maxUploadRetryTime = 90_000
   storage.maxOperationRetryTime = 30_000
 }
 
-export { app, db, storage, auth }
+export { app, db, storage }

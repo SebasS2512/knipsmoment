@@ -113,6 +113,20 @@ p { margin: 0; }
   color: var(--ink-soft);
   text-wrap: pretty;
 }
+.app-status .seal {
+  width: 64px; height: 64px; border-radius: 50%; margin-bottom: 8px;
+  background: var(--accent-pale); color: var(--accent-deep);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 30px;
+  border: 1.5px solid var(--accent);
+}
+.app-status .landing-admin {
+  margin-top: 18px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-underline-offset: 3px;
+}
 
 /* ——— Reduced Motion ——— */
 @media (prefers-reduced-motion: reduce) {

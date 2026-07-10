@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getGuestSessionId, useGuestSession } from './useGuestSession'
 import { useUploadQueue } from './useUploadQueue'
 import { WelcomeScreen } from './WelcomeScreen'
@@ -29,6 +29,14 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
   // des vorherigen Gasts dürfen nicht verloren gehen.
   const { enqueue, retryFailed, summary } = useUploadQueue(event.id, guestSessionId)
 
+  // Optionaler Gastname (§7 V1) — pro Gerät gemerkt, wandert in jedes Foto-Dokument
+  const [guestName, setGuestName] = useState(
+    () => localStorage.getItem('km:guestName') ?? '',
+  )
+  useEffect(() => {
+    localStorage.setItem('km:guestName', guestName)
+  }, [guestName])
+
   // Object-URLs der in dieser Sitzung geknipsten Bilder (für Streifen & Roll);
   // nach einem Reload zeigen die Frames wieder Platzhalter-Schraffur.
   const shotsRef = useRef<string[]>([])
@@ -45,7 +53,7 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
     if (remaining <= 0) return
     shotsRef.current = [...shotsRef.current, URL.createObjectURL(file)]
     setTakenCount(takenCount + 1)
-    enqueue(file)
+    enqueue(file, guestName)
   }
 
   function handleReset() {
@@ -58,7 +66,12 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
   return (
     <div className="guest-app" data-screen={screen}>
       <div className={`screen ${screen === 'welcome' ? 'active' : ''}`}>
-        <WelcomeScreen event={event} onStart={() => setScreen('cam')} />
+        <WelcomeScreen
+          event={event}
+          guestName={guestName}
+          onGuestName={setGuestName}
+          onStart={() => setScreen('cam')}
+        />
       </div>
       <div className={`screen cam ${screen === 'cam' ? 'active' : ''}`}>
         <CameraScreen

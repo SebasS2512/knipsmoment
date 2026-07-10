@@ -32,7 +32,12 @@ React + Vite + TypeScript PWA nach dem Design-Handoff in
       Downloads laufen über `getBlob` (SDK) statt `fetch(url)` — die tokenisierten
       URLs der `*.firebasestorage.app`-Buckets senden keine CORS-Header; zusätzlich
       ist Bucket-CORS für GET gesetzt (einmalig, via `scripts/set-bucket-cors.mjs`).
-- [ ] 8. Cross-Device-Tests, Fehler-/Ladezustände, Service Worker.
+- [x] **8. PWA & Polish** — Service Worker (`vite-plugin-pwa`, autoUpdate,
+      Font-Caching), PNG-Icons aus dem SVG (`scripts/make-icons.mjs`), Code-Splitting
+      (Admin lazy, eigener Chunk mit auth/jszip/qrcode), optionaler Gastname im
+      Welcome-Screen (→ `guestName` im Foto-Dokument), Offline-Chip + Auto-Retry
+      bei Netz-Rückkehr, neutrale Landing auf `/` (Demo-Event nur im DEV-Modus).
+      **Offen: Tests auf echten iOS/Android-Geräten + Testdaten löschen.**
 
 ## Entwicklung
 

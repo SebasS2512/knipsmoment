@@ -36,27 +36,24 @@ Firebase-Projekt `knipsmoment` verifiziert:
   GETs. Zusätzlich ist auf dem Bucket eine CORS-Config (GET, origin *) gesetzt;
   falls je ein neuer Bucket entsteht: `node scripts/set-bucket-cors.mjs`.
 
+- **Schritt 8 ist im Kern ebenfalls fertig**: Service Worker (`vite-plugin-pwa`,
+  autoUpdate, Font-Runtime-Caching), PNG-Icons (`scripts/make-icons.mjs`),
+  Code-Splitting (Admin via `React.lazy`; `firebase/auth` liegt bewusst in
+  `src/lib/auth.ts`, getrennt von `lib/firebase.ts`), optionaler Gastname
+  (Welcome-Screen → `guestName` im Foto-Dokument), Offline-Chip im Sucher +
+  Auto-Retry bei `online`-Event, neutrale Landing auf `/` in Produktion
+  (Demo-Event nur bei `import.meta.env.DEV`).
+
 ## Offene Aufgaben (in dieser Reihenfolge)
 
-### Schritt 8 — Polish & PWA
-- **Service Worker / PWA**: `vite-plugin-pwa` einbauen (Manifest liegt schon in
-  `public/manifest.webmanifest`), App-Shell cachen. Uploads NICHT offline
-  queuen (bewusst schlank halten).
-- **Code-Splitting**: Bundle ist ~880 kB. Admin-Bereich per `React.lazy` +
-  dynamic import abspalten; Gäste-Route soll klein sein.
-- **Optionaler Gastname** (§7 V1): kleines Mono-Eingabefeld im Welcome-Screen
-  („Wer knipst da? (optional)"), Wert in localStorage + als `guestName` ins
-  Foto-Dokument (`src/lib/uploadPhoto.ts` erweitern; Rules erlauben das Feld).
-- **Fehler-/Ladezustände**: Offline-Hinweis im Gäste-Flow (`navigator.onLine`),
-  Skeleton statt Textzeile beim Event-Laden.
-- **Cross-Device**: iOS Safari + Android Chrome testen — `<input capture>`
-  verhält sich unterschiedlich (§8). Safe-Area auf Geräten mit Notch prüfen.
-- **Produktions-Root**: `/` zeigt aktuell das Demo-Event (`DEMO_EVENT` in
-  `src/lib/useEvent.ts`). Vor Launch: durch neutrale Landing ersetzen
-  („Knipsmoment — QR-Code der Einladung scannen") und Demo-Fallback nur in
-  DEV (`import.meta.env.DEV`) lassen.
-- **Testdaten räumen**: Test-Konten + Events `demo`/`ab26` löschen (Console
-  oder Dashboard), bevor echte Nutzer kommen.
+### Rest von Schritt 8 (braucht echte Geräte / den Betreiber)
+- **Cross-Device**: iOS Safari + Android Chrome auf echten Geräten testen —
+  `<input capture>` verhält sich unterschiedlich (§8). Safe-Area bei Notch
+  prüfen. Dafür lokal per `npm run dev -- --host` im WLAN testen oder erst
+  deployen.
+- **Testdaten räumen** (vor Launch): Auth-Konten `brautpaar-test@…` und
+  `onboarding-test@…` in der Console löschen; Events `demo` und `ab26` samt
+  Fotos (Firestore + Storage) entfernen.
 
 ### Schritt 9 (optional) — Stil-Varianten B/C
 - Nur wenn der Kunde es will (§4.2): Polaroid/Filmstreifen als Alternative zu

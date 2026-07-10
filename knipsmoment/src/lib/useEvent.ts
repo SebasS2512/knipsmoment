@@ -32,18 +32,28 @@ export type EventState =
   | { status: 'loading' }
   | { status: 'ready'; event: GuestEventConfig }
   | { status: 'not_found' }
+  | { status: 'landing' }
 
 /**
  * Event über den QR-/URL-Slug aus Firestore laden.
- * Ohne Slug (oder ohne Firebase-Config) läuft das Demo-Event.
+ * Ohne Slug: im DEV-Modus (oder ohne Firebase-Config) läuft das Demo-Event,
+ * in Produktion die neutrale Landing-Seite.
  */
 export function useEvent(): EventState {
   const [state, setState] = useState<EventState>({ status: 'loading' })
 
   useEffect(() => {
     const slug = slugFromPath(window.location.pathname)
-    if (!slug || !isFirebaseConfigured || !db) {
-      setState({ status: 'ready', event: DEMO_EVENT })
+    if (!slug) {
+      if (import.meta.env.DEV || !isFirebaseConfigured) {
+        setState({ status: 'ready', event: DEMO_EVENT })
+      } else {
+        setState({ status: 'landing' })
+      }
+      return
+    }
+    if (!isFirebaseConfigured || !db) {
+      setState({ status: 'ready', event: { ...DEMO_EVENT } })
       return
     }
 

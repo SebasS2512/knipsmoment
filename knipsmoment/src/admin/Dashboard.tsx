@@ -12,7 +12,8 @@ import {
 } from 'firebase/firestore'
 import { deleteObject, getBlob, ref } from 'firebase/storage'
 import JSZip from 'jszip'
-import { auth, db, storage } from '../lib/firebase'
+import { db, storage } from '../lib/firebase'
+import { auth } from '../lib/auth'
 import type { PhotoStatus } from '../types/models'
 import type { AdminEvent } from './AdminApp'
 

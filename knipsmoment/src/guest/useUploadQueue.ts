@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { uploadPhoto } from '../lib/uploadPhoto'
 import { isFirebaseConfigured } from '../lib/firebase'
 
 type QueueItem = {
   id: string
   file: File
+  guestName?: string
   status: 'queued' | 'uploading' | 'done' | 'error'
 }
 
@@ -44,7 +45,7 @@ export function useUploadQueue(eventId: string, guestSessionId: string) {
         next.status = 'uploading'
         sync()
         try {
-          await uploadPhoto(eventId, next.file, guestSessionId)
+          await uploadPhoto(eventId, next.file, guestSessionId, next.guestName)
           next.status = 'done'
         } catch {
           next.status = 'error'
@@ -57,9 +58,9 @@ export function useUploadQueue(eventId: string, guestSessionId: string) {
   }, [eventId, guestSessionId, sync])
 
   const enqueue = useCallback(
-    (file: File) => {
+    (file: File, guestName?: string) => {
       if (!isFirebaseConfigured) return // Demo-Modus: nur lokal
-      queue.current.push({ id: crypto.randomUUID(), file, status: 'queued' })
+      queue.current.push({ id: crypto.randomUUID(), file, guestName, status: 'queued' })
       sync()
       void process()
     },
@@ -73,6 +74,13 @@ export function useUploadQueue(eventId: string, guestSessionId: string) {
     sync()
     void process()
   }, [process, sync])
+
+  // Sobald das Netz zurück ist, fehlgeschlagene Uploads automatisch neu anstoßen (§8)
+  useEffect(() => {
+    const onOnline = () => retryFailed()
+    window.addEventListener('online', onOnline)
+    return () => window.removeEventListener('online', onOnline)
+  }, [retryFailed])
 
   const clear = useCallback(() => {
     queue.current = []

@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
-import { auth } from '../lib/firebase'
+import { auth } from '../lib/auth'
 
 const ERROR_TEXT: Record<string, string> = {
   'auth/invalid-credential': 'E-Mail oder Passwort stimmt nicht.',

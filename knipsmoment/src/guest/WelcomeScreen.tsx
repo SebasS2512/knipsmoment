@@ -3,9 +3,13 @@ import type { GuestEventConfig } from './GuestFlow'
 /** Screen A — Welcome (§4.1, `01-gast-welcome.png`) */
 export function WelcomeScreen({
   event,
+  guestName,
+  onGuestName,
   onStart,
 }: {
   event: GuestEventConfig
+  guestName: string
+  onGuestName: (name: string) => void
   onStart: () => void
 }) {
   const [nameA = '', nameB = ''] = event.coupleNames.split('&').map((s) => s.trim())
@@ -35,6 +39,14 @@ export function WelcomeScreen({
       <div className="count-pill">
         <span>◉</span> {event.photoLimit} Bilder frei
       </div>
+      <input
+        className="guest-name"
+        type="text"
+        placeholder="Wer knipst da? (optional)"
+        maxLength={40}
+        value={guestName}
+        onChange={(e) => onGuestName(e.target.value)}
+      />
       <button type="button" className="btn btn-amber start-btn" onClick={onStart}>
         Filmrolle einlegen →
       </button>

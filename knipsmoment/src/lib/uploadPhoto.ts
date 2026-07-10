@@ -33,6 +33,7 @@ export async function uploadPhoto(
   eventId: string,
   file: File,
   guestSessionId: string,
+  guestName?: string,
 ): Promise<void> {
   if (!db || !storage) throw new Error('Firebase ist nicht konfiguriert')
 
@@ -54,5 +55,6 @@ export async function uploadPhoto(
     createdAt: serverTimestamp(),
     width,
     height,
+    ...(guestName?.trim() ? { guestName: guestName.trim() } : {}),
   })
 }

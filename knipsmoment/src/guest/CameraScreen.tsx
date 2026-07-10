@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent } from 'react'
 import type { CaptureMode } from '../types/models'
 import type { QueueSummary } from './useUploadQueue'
+import { useOnline } from '../lib/useOnline'
 
 const TOAST_MS = 1300
 const STRIP_MAX = 7
@@ -39,6 +40,7 @@ export function CameraScreen({
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const remaining = limit - taken
+  const online = useOnline()
 
   function handleFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -81,8 +83,13 @@ export function CameraScreen({
         </div>
         <span className="vf-date datestamp">{dateLabel.replace(/\s/g, '')}</span>
 
-        {/* Upload-Zustand: sichern läuft / Fehler mit Retry (§8) */}
-        {upload.failed > 0 ? (
+        {/* Upload-Zustand: offline / sichern läuft / Fehler mit Retry (§8) */}
+        {!online && (upload.failed > 0 || upload.pending > 0) ? (
+          <span className="vf-upload">
+            ○ OFFLINE · {upload.failed + upload.pending}{' '}
+            {upload.failed + upload.pending === 1 ? 'BILD WARTET' : 'BILDER WARTEN'}
+          </span>
+        ) : upload.failed > 0 ? (
           <button type="button" className="vf-upload error" onClick={onRetryUpload}>
             ⚠ {upload.failed} NICHT GESICHERT · ERNEUT
           </button>
