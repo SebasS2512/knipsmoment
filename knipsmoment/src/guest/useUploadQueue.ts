@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { uploadPhoto } from '../lib/uploadPhoto'
 import { isFirebaseConfigured } from '../lib/firebase'
+import { randomId } from '../lib/id'
 
 type QueueItem = {
   id: string
@@ -60,7 +61,7 @@ export function useUploadQueue(eventId: string, guestSessionId: string) {
   const enqueue = useCallback(
     (file: File, guestName?: string) => {
       if (!isFirebaseConfigured) return // Demo-Modus: nur lokal
-      queue.current.push({ id: crypto.randomUUID(), file, guestName, status: 'queued' })
+      queue.current.push({ id: randomId(), file, guestName, status: 'queued' })
       sync()
       void process()
     },

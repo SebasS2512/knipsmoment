@@ -73,6 +73,16 @@ Firebase-Projekt `knipsmoment` verifiziert:
   (`https://knipsmoment.web.app/l/{slug}` — die QR-Generierung nutzt
   `window.location.origin`, stimmt also automatisch).
 
+## Bekannte Stolperfallen
+- **Secure Context**: `crypto.randomUUID()` existiert nur unter HTTPS/localhost.
+  Beim Testen über die WLAN-IP (`npm run dev:host` → `http://192.168.x.x:5173`)
+  crashte die App deshalb mit weißem Bildschirm. Fix: `randomId()` in
+  `src/lib/id.ts` (Fallback über `crypto.getRandomValues`). Gleiches Muster gilt
+  für andere Secure-Context-APIs (Service Worker, `navigator.share`, Clipboard) —
+  die degradieren aber nur, statt zu crashen.
+- **CORS Storage-Downloads**: siehe Schritt-7-Notiz oben (`getBlob` statt
+  `fetch(url)` + Bucket-CORS).
+
 ## Arbeitsweise
 - Referenzen: Tokens aus `src/styles/tokens.css` (= §3 der Design-README),
   Verhalten aus `../design_handoff_knipsmoment/prototype.js`, Maße/Copy aus

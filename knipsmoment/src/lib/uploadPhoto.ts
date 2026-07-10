@@ -2,6 +2,7 @@ import imageCompression from 'browser-image-compression'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, storage } from './firebase'
+import { randomId } from './id'
 
 // Client-Kompression vor Upload ist zwingend (§8) — Ziel deutlich unter dem
 // 10-MB-Limit der Storage-Rules, Handy-Fotos schrumpfen auf ~0,5–0,8 MB.
@@ -40,7 +41,7 @@ export async function uploadPhoto(
   const compressed = await imageCompression(file, COMPRESSION)
   const { width, height } = await readDimensions(compressed)
 
-  const photoId = crypto.randomUUID()
+  const photoId = randomId()
   const storagePath = `events/${eventId}/photos/${photoId}.jpg`
   const storageRef = ref(storage, storagePath)
 

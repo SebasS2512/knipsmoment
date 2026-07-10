@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { randomId } from '../lib/id'
 import type { GuestScreen } from '../types/models'
 
 const SESSION_KEY = 'km:guestSessionId'
@@ -7,7 +8,7 @@ const SESSION_KEY = 'km:guestSessionId'
 export function getGuestSessionId(): string {
   let id = localStorage.getItem(SESSION_KEY)
   if (!id) {
-    id = crypto.randomUUID()
+    id = randomId()
     localStorage.setItem(SESSION_KEY, id)
   }
   return id
