@@ -38,6 +38,12 @@ React + Vite + TypeScript PWA nach dem Design-Handoff in
       Welcome-Screen (→ `guestName` im Foto-Dokument), Offline-Chip + Auto-Retry
       bei Netz-Rückkehr, neutrale Landing auf `/` (Demo-Event nur im DEV-Modus).
       **Offen: Tests auf echten iOS/Android-Geräten + Testdaten löschen.**
+- [x] **9. Stil-Varianten B/C (§4.2)** — „Polaroid" (`PolaroidScreen.tsx`,
+      Sofortbild fällt mit Drop-Animation heraus) und „Filmstreifen"
+      (`FilmstripScreen.tsx`, Perforations-Schienen + großer Serif-Zähler).
+      Auswahl im Onboarding („Stil des Knips-Screens"), Event-Feld `theme`;
+      zum Ausprobieren `?theme=polaroid|filmstrip|finder` an eine Gäste-URL
+      hängen. Gemeinsame Auslöser-Logik in `useShutter.ts`.
 
 ## Entwicklung
 

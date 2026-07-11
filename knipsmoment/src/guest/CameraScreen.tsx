@@ -1,42 +1,16 @@
-import { useEffect, useRef, useState, type ChangeEvent } from 'react'
-import { Capacitor } from '@capacitor/core'
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
+import { useEffect, useRef, useState } from 'react'
 import type { CaptureMode } from '../types/models'
 import type { QueueSummary } from './useUploadQueue'
+import { useShutter } from './useShutter'
 import { useOnline } from '../lib/useOnline'
 
-const TOAST_MS = 1300
 const STRIP_MAX = 7
 
 /**
- * Nativer Kamera-/Galerie-Zugriff über das Capacitor-Camera-Plugin.
- * Liefert null, wenn der Gast abbricht oder die Berechtigung verweigert.
- */
-async function nativePhoto(source: CameraSource): Promise<File | null> {
-  try {
-    const photo = await Camera.getPhoto({
-      resultType: CameraResultType.Uri,
-      source,
-      quality: 90,
-      correctOrientation: true,
-    })
-    if (!photo.webPath) return null
-    const blob = await fetch(photo.webPath).then((r) => r.blob())
-    return new File([blob], `knips-${Date.now()}.jpg`, {
-      type: blob.type || 'image/jpeg',
-    })
-  } catch {
-    return null
-  }
-}
-
-/**
- * Screen B — Sucher / Kamera (§4.1, `02-gast-sucher.png`).
- * Der Sucher zeigt ein Live-Bild der Rückkamera (getUserMedia) direkt unter
- * dem Overlay; der Auslöser friert einen Video-Frame ein. Wo kein Live-Stream
- * möglich ist (Berechtigung verweigert, kein Secure Context, keine Kamera),
- * fällt der Auslöser auf Capacitor-Camera bzw. `<input capture>` zurück.
- * „AUS GALERIE" öffnet den Picker. Beides verbraucht ein Bild (§5).
+ * Variante A — „Der Sucher" (§4.1/§4.2, `02-gast-sucher.png`).
+ * Zeigt die Rückkamera live (getUserMedia) unter dem Overlay; der Auslöser
+ * friert einen Video-Frame ein. Ohne Live-Stream greift die Kaskade aus
+ * useShutter (Capacitor-Camera → <input capture>).
  */
 export function CameraScreen({
   active,
@@ -59,19 +33,9 @@ export function CameraScreen({
   onPhoto: (file: File) => void
   onRetryUpload: () => void
 }) {
-  const cameraInput = useRef<HTMLInputElement>(null)
-  const galleryInput = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const [live, setLive] = useState(false)
-  const [flashKey, setFlashKey] = useState(0)
-  const [toast, setToast] = useState<{ text: string; visible: boolean }>({
-    text: '',
-    visible: false,
-  })
-  const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
-
-  const remaining = limit - taken
   const online = useOnline()
 
   // Live-Sucher: Rückkamera nur starten, solange dieser Screen aktiv ist,
@@ -113,27 +77,6 @@ export function CameraScreen({
     }
   }, [active])
 
-  function acceptPhoto(file: File) {
-    if (remaining <= 0) return
-
-    onPhoto(file)
-    setFlashKey((k) => k + 1)
-
-    const n = taken + 1
-    setToast({ text: `Bild ${n} von ${limit} gesichert`, visible: true })
-    clearTimeout(toastTimer.current)
-    toastTimer.current = setTimeout(
-      () => setToast((t) => ({ ...t, visible: false })),
-      TOAST_MS,
-    )
-  }
-
-  function handleFile(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    e.target.value = ''
-    if (file) acceptPhoto(file)
-  }
-
   /** Frame aus dem Live-Stream einfrieren */
   async function snapFromStream(): Promise<File | null> {
     const video = videoRef.current
@@ -146,25 +89,8 @@ export function CameraScreen({
     return blob ? new File([blob], `knips-${Date.now()}.jpg`, { type: 'image/jpeg' }) : null
   }
 
-  // Reihenfolge Auslöser: Live-Stream → Capacitor-Plugin (nativ) → <input capture>
-  async function capture(source: 'camera' | 'gallery') {
-    if (source === 'camera' && live) {
-      const file = await snapFromStream()
-      if (file) {
-        acceptPhoto(file)
-        return
-      }
-    }
-    if (Capacitor.isNativePlatform()) {
-      const file = await nativePhoto(
-        source === 'camera' ? CameraSource.Camera : CameraSource.Photos,
-      )
-      if (file) acceptPhoto(file)
-    } else {
-      const input = source === 'camera' ? cameraInput : galleryInput
-      input.current?.click()
-    }
-  }
+  const { remaining, flashKey, toast, capture, handleFile, cameraInput, galleryInput } =
+    useShutter({ limit, taken, onPhoto, snapLive: live ? snapFromStream : undefined })
 
   // Modus 'upload' (§4.3): der Auslöser öffnet den Picker statt der Kamera
   const shutterSource = captureMode === 'upload' ? 'gallery' : 'camera'

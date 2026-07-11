@@ -18,6 +18,7 @@ import {
   PHOTO_LIMIT_MIN,
   type CaptureMode,
   type GalleryVisibility,
+  type GuestTheme,
 } from '../types/models'
 
 type Step = 'basics' | 'film' | 'qr'
@@ -30,6 +31,11 @@ const CAPTURE_OPTIONS: { key: CaptureMode; label: string }[] = [
 const GALLERY_OPTIONS: { key: GalleryVisibility; label: string }[] = [
   { key: 'immediate', label: 'Ja' },
   { key: 'after_approval', label: 'Erst nach Freigabe' },
+]
+const THEME_OPTIONS: { key: GuestTheme; label: string }[] = [
+  { key: 'finder', label: 'Sucher' },
+  { key: 'polaroid', label: 'Polaroid' },
+  { key: 'filmstrip', label: 'Filmstreifen' },
 ]
 
 /** "Lena & Jonas" + 12.07.2025 → "lj25" */
@@ -73,6 +79,7 @@ export function Onboarding({
   const [photoLimit, setPhotoLimit] = useState(PHOTO_LIMIT_DEFAULT)
   const [captureMode, setCaptureMode] = useState<CaptureMode>('both')
   const [galleryVisible, setGalleryVisible] = useState<GalleryVisibility>('after_approval')
+  const [theme, setTheme] = useState<GuestTheme>('finder')
 
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -97,6 +104,7 @@ export function Onboarding({
         photoLimit,
         captureMode,
         galleryVisible,
+        theme,
         slug: s,
         createdAt: serverTimestamp(),
         adminUid,
@@ -203,6 +211,21 @@ export function Onboarding({
                 type="button"
                 className={`o ${galleryVisible === o.key ? 'on' : ''}`}
                 onClick={() => setGalleryVisible(o.key)}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="field">
+          <label>Stil des Knips-Screens</label>
+          <div className="seg">
+            {THEME_OPTIONS.map((o) => (
+              <button
+                key={o.key}
+                type="button"
+                className={`o ${theme === o.key ? 'on' : ''}`}
+                onClick={() => setTheme(o.key)}
               >
                 {o.label}
               </button>

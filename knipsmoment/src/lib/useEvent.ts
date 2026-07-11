@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs, limit, query, where, type Timestamp } from 'firebase/firestore'
 import { db, isFirebaseConfigured } from './firebase'
-import type { CaptureMode } from '../types/models'
+import type { CaptureMode, GuestTheme } from '../types/models'
 import type { GuestEventConfig } from '../guest/GuestFlow'
 
 /** Demo-Event für lokale Entwicklung ohne Slug (Root-URL) */
@@ -11,6 +11,13 @@ export const DEMO_EVENT: GuestEventConfig = {
   dateLabel: '12 · 07 · 25',
   photoLimit: 10,
   captureMode: 'both',
+  theme: 'finder',
+}
+
+/** Feature-Flag zum Ausprobieren der Stil-Varianten: ?theme=polaroid|filmstrip|finder */
+function themeOverride(): GuestTheme | null {
+  const t = new URLSearchParams(window.location.search).get('theme')
+  return t === 'finder' || t === 'polaroid' || t === 'filmstrip' ? t : null
 }
 
 /** "12 · 07 · 25" aus einem Firestore-Timestamp */
@@ -46,14 +53,20 @@ export function useEvent(): EventState {
     const slug = slugFromPath(window.location.pathname)
     if (!slug) {
       if (import.meta.env.DEV || !isFirebaseConfigured) {
-        setState({ status: 'ready', event: DEMO_EVENT })
+        setState({
+          status: 'ready',
+          event: { ...DEMO_EVENT, theme: themeOverride() ?? DEMO_EVENT.theme },
+        })
       } else {
         setState({ status: 'landing' })
       }
       return
     }
     if (!isFirebaseConfigured || !db) {
-      setState({ status: 'ready', event: { ...DEMO_EVENT } })
+      setState({
+        status: 'ready',
+        event: { ...DEMO_EVENT, theme: themeOverride() ?? DEMO_EVENT.theme },
+      })
       return
     }
 
@@ -75,6 +88,7 @@ export function useEvent(): EventState {
             dateLabel: formatDateLabel(data.date as Timestamp),
             photoLimit: data.photoLimit as number,
             captureMode: (data.captureMode as CaptureMode) ?? 'both',
+            theme: themeOverride() ?? (data.theme as GuestTheme | undefined) ?? 'finder',
           },
         })
       })

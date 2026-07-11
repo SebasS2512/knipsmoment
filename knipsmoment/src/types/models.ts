@@ -7,6 +7,8 @@ import type { Timestamp } from 'firebase/firestore'
 export type CaptureMode = 'finder' | 'upload' | 'both'
 export type GalleryVisibility = 'immediate' | 'after_approval'
 export type PhotoStatus = 'pending' | 'approved' | 'rejected'
+/** Stil-Variante des Gäste-Screens (§4.2): A Sucher · B Polaroid · C Filmstreifen */
+export type GuestTheme = 'finder' | 'polaroid' | 'filmstrip'
 
 export const PHOTO_LIMIT_MIN = 3
 export const PHOTO_LIMIT_MAX = 15
@@ -20,6 +22,7 @@ export interface WeddingEvent {
   photoLimit: number           // 3–15, default 10
   captureMode: CaptureMode
   galleryVisible: GalleryVisibility
+  theme?: GuestTheme           // default 'finder'
   slug: string                 // "lj25" → knipsmoment.app/l/lj25
   createdAt: Timestamp
   adminUid: string

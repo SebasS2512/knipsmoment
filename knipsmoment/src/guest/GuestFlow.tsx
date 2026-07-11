@@ -3,8 +3,10 @@ import { getGuestSessionId, useGuestSession } from './useGuestSession'
 import { useUploadQueue } from './useUploadQueue'
 import { WelcomeScreen } from './WelcomeScreen'
 import { CameraScreen } from './CameraScreen'
+import { PolaroidScreen } from './PolaroidScreen'
+import { FilmstripScreen } from './FilmstripScreen'
 import { DoneScreen } from './DoneScreen'
-import type { CaptureMode } from '../types/models'
+import type { CaptureMode, GuestTheme } from '../types/models'
 import './guest.css'
 
 export interface GuestEventConfig {
@@ -13,6 +15,7 @@ export interface GuestEventConfig {
   dateLabel: string   // "12 · 07 · 25"
   photoLimit: number
   captureMode: CaptureMode
+  theme: GuestTheme   // Stil-Variante des Knips-Screens (§4.2)
 }
 
 /**
@@ -63,8 +66,19 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
     setScreen('welcome')
   }
 
+  const variantProps = {
+    limit: event.photoLimit,
+    taken: takenCount,
+    dateLabel: event.dateLabel,
+    captureMode: event.captureMode,
+    shots: shotsRef.current,
+    upload: summary,
+    onPhoto: handlePhoto,
+    onRetryUpload: retryFailed,
+  }
+
   return (
-    <div className="guest-app" data-screen={screen}>
+    <div className="guest-app" data-screen={screen} data-theme={event.theme}>
       <div className={`screen ${screen === 'welcome' ? 'active' : ''}`}>
         <WelcomeScreen
           event={event}
@@ -73,18 +87,14 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
           onStart={() => setScreen('cam')}
         />
       </div>
-      <div className={`screen cam ${screen === 'cam' ? 'active' : ''}`}>
-        <CameraScreen
-          active={screen === 'cam'}
-          limit={event.photoLimit}
-          taken={takenCount}
-          dateLabel={event.dateLabel}
-          captureMode={event.captureMode}
-          shots={shotsRef.current}
-          upload={summary}
-          onPhoto={handlePhoto}
-          onRetryUpload={retryFailed}
-        />
+      <div className={`screen cam ${event.theme} ${screen === 'cam' ? 'active' : ''}`}>
+        {event.theme === 'polaroid' ? (
+          <PolaroidScreen {...variantProps} />
+        ) : event.theme === 'filmstrip' ? (
+          <FilmstripScreen {...variantProps} />
+        ) : (
+          <CameraScreen active={screen === 'cam'} {...variantProps} />
+        )}
       </div>
       <div className={`screen ${screen === 'done' ? 'active' : ''}`}>
         <DoneScreen

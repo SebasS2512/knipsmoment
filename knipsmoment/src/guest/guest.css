@@ -12,6 +12,8 @@
   background: var(--paper);
 }
 .guest-app[data-screen='cam'] { background: var(--cam-bg); }
+.guest-app[data-screen='cam'][data-theme='polaroid'] { background: var(--sage-mist); }
+.guest-app[data-screen='cam'][data-theme='filmstrip'] { background: var(--paper); }
 
 /* Screens gestapelt, Crossfade wie im Prototyp */
 .screen {
@@ -297,6 +299,118 @@
   border: 1px solid rgba(255,255,255,0.15);
 }
 .cam-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ——————————————— VARIANTE B · POLAROID (§4.2) ——— */
+.screen.cam.polaroid { background: var(--sage-mist); color: var(--ink); }
+.screen-body.polaroid {
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+.polaroid-cap {
+  background: #fff;
+  padding: 14px 14px 0;
+  border-radius: 4px;
+  box-shadow: 0 10px 24px rgba(42, 40, 34, 0.16);
+  width: min(230px, 68vw);
+  transform: rotate(-3deg);
+}
+.polaroid-cap.drop { animation: pl-drop 0.5s cubic-bezier(0.2, 0.8, 0.3, 1.15); }
+@keyframes pl-drop {
+  from { transform: translateY(-46px) rotate(3deg) scale(0.92); opacity: 0; }
+  to   { transform: translateY(0) rotate(-3deg) scale(1); opacity: 1; }
+}
+.polaroid-cap .ph {
+  aspect-ratio: 1;
+  background-size: cover;
+  background-position: center;
+}
+.polaroid-cap .pl-foot { padding: 14px 4px 16px; text-align: center; }
+.polaroid-cap .pl-foot .hand { font-family: var(--serif); font-size: 22px; }
+.polaroid-cap .pl-foot .d {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink-faint); margin-top: 2px;
+}
+.pl-shutter { margin-top: 30px; width: 170px; }
+.pl-shutter:disabled { background: var(--ink-faint); cursor: not-allowed; }
+.pl-gallery {
+  margin-top: 12px; min-height: 44px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.pl-gallery:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ——————————————— VARIANTE C · FILMSTREIFEN (§4.2) ——— */
+.screen.cam.filmstrip { background: var(--paper); color: var(--ink); }
+.screen-body.var-c { position: relative; padding: 0; }
+.vc-rail {
+  position: absolute; top: 0; bottom: 0;
+  width: 26px;
+  background-image: radial-gradient(circle, var(--ink) 0 3px, transparent 3.4px);
+  background-size: 26px 24px;
+  background-position: center;
+  opacity: 0.85;
+}
+.vc-rail.left { left: 0; }
+.vc-rail.right { right: 0; }
+.vc-center {
+  height: 100%;
+  padding: 24px 44px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+}
+.vc-kicker {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+.vc-shot {
+  width: min(200px, 55vw);
+  aspect-ratio: 1;
+  margin: 18px auto;
+  border: 1px solid var(--line);
+  background-size: cover;
+  background-position: center;
+}
+.vc-count {
+  font-family: var(--serif);
+  font-size: 40px;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+.vc-shutter { margin-top: 24px; width: 190px; }
+.vc-shutter:disabled { background: var(--ink-faint); cursor: not-allowed; }
+.vc-gallery {
+  margin-top: 14px; min-height: 44px;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.vc-gallery:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Upload-Chip auf hellen Varianten (§8) */
+.up-chip {
+  margin-top: 18px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  background: rgba(42, 40, 34, 0.08);
+  border: none; border-radius: 999px;
+  padding: 6px 12px;
+}
+.up-chip.error { background: var(--amber); color: #fff; cursor: pointer; }
+
+/* Toast auf hellen Varianten: dunkler Chip funktioniert, nur Position anpassen */
+.screen-body.polaroid .cam-toast,
+.screen-body.var-c .cam-toast { top: 24px; }
 
 /* ——————————————— SCREEN C · DONE ——— */
 .done { justify-content: center; text-align: center; gap: 2px; }
