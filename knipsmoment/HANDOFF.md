@@ -64,6 +64,8 @@ Firebase-Projekt `knipsmoment` verifiziert:
 - **Testdaten räumen** (vor Launch): Auth-Konten `brautpaar-test@…` und
   `onboarding-test@…` in der Console löschen; Events `demo` und `ab26` samt
   Fotos (Firestore + Storage) entfernen.
+  **WICHTIG: Erst löschen, wenn Sebastian es explizit freigibt — die Daten
+  werden aktuell noch zum Testen und für die Prüfungsvorbereitung gebraucht.**
 
 ### Schritt 9 (optional) — Stil-Varianten B/C
 - Nur wenn der Kunde es will (§4.2): Polaroid/Filmstreifen als Alternative zu
