@@ -62,6 +62,8 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
     shotsRef.current = [...shotsRef.current, URL.createObjectURL(file)]
     setTakenCount(takenCount + 1)
     enqueue(file, guestName, challenges.current)
+    // Aufgabe gilt mit diesem Foto als erledigt → nicht mehr einblenden
+    if (challenges.current) challenges.markDone(challenges.current)
   }
 
   function handleReset() {
@@ -80,7 +82,7 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
     shots: shotsRef.current,
     upload: summary,
     challenge: challenges.current,
-    challengeCount: challenges.assigned.length,
+    challengeCount: challenges.open.length,
     onNextChallenge: challenges.next,
     onPhoto: handlePhoto,
     onRetryUpload: retryFailed,

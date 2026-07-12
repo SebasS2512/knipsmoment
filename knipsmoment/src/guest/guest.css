@@ -398,21 +398,24 @@
 .vc-gallery:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ——————————————— FOTO-AUFGABEN (Challenges) ——— */
+.challenge-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 290px;
+}
 .challenge-chip {
-  display: block;
-  max-width: 280px;
   background: rgba(20, 19, 15, 0.72);
   border: 1px solid rgba(244, 178, 106, 0.45);
   border-radius: 12px;
-  padding: 9px 14px;
+  padding: 10px 14px;
   color: #fff;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.45;
-  text-align: left;
-  cursor: pointer;
+  text-align: center;
 }
-.challenge-chip:disabled { cursor: default; }
 .challenge-chip .cc-label {
   display: block;
   font-family: var(--mono);
@@ -421,6 +424,20 @@
   text-transform: uppercase;
   color: var(--amber-glow);
   margin-bottom: 3px;
+}
+/* eigener, gut tippbarer Wechsel-Button */
+.cc-switch {
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 /* Position in Variante A: unter der oberen Sucher-Zeile */
 .vf-challenge {
@@ -431,19 +448,24 @@
   z-index: 5;
 }
 /* Helle Varianten B/C: Karte statt Dunkel-Chip */
+.screen-body.polaroid .challenge-box { margin-top: 22px; }
+.screen-body.var-c .challenge-box { margin-top: 16px; }
 .screen-body.polaroid .challenge-chip,
 .screen-body.var-c .challenge-chip {
-  margin-top: 22px;
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid var(--line);
   color: var(--ink);
-  text-align: center;
 }
 .screen-body.polaroid .challenge-chip .cc-label,
 .screen-body.var-c .challenge-chip .cc-label {
   color: var(--amber);
 }
-.screen-body.var-c .challenge-chip { margin-top: 16px; }
+.screen-body.polaroid .cc-switch,
+.screen-body.var-c .cc-switch {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink-soft);
+}
 
 /* Upload-Chip auf hellen Varianten (§8) */
 .up-chip {

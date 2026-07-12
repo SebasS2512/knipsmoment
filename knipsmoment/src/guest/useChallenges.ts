@@ -6,45 +6,69 @@ const PER_GUEST = 2
 /**
  * Teilt jedem Gast 1–2 Foto-Aufgaben zufällig zu (aus den im Onboarding
  * aktivierten). Die Zuteilung bleibt pro Gerät/Session stabil (localStorage);
+ * erledigte Aufgaben (Foto damit gemacht) werden nicht mehr eingeblendet;
  * beim „Noch jemand?"-Reset zieht der nächste Gast neue Aufgaben.
  */
 export function useChallenges(eventId: string, available: string[]) {
-  const storageKey = `km:${eventId}:challenges`
+  const assignedKey = `km:${eventId}:challenges`
+  const doneKey = `km:${eventId}:challengesDone`
+
+  const readList = (key: string): string[] => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(key) ?? 'null')
+      return Array.isArray(stored) ? stored.filter((c) => typeof c === 'string') : []
+    } catch {
+      return []
+    }
+  }
 
   const [assigned, setAssigned] = useState<string[]>(() => {
     if (available.length === 0) return []
-    try {
-      const stored = JSON.parse(localStorage.getItem(storageKey) ?? 'null')
-      // nur übernehmen, was es (noch) gibt — Event-Aufgaben könnten sich ändern
-      if (Array.isArray(stored)) {
-        const valid = stored.filter((c) => available.includes(c))
-        if (valid.length > 0) return valid
-      }
-    } catch {
-      // kaputter Eintrag → neu ziehen
-    }
+    // nur übernehmen, was es (noch) gibt — Event-Aufgaben könnten sich ändern
+    const valid = readList(assignedKey).filter((c) => available.includes(c))
+    if (valid.length > 0) return valid
     const fresh = pickChallenges(available, PER_GUEST)
-    localStorage.setItem(storageKey, JSON.stringify(fresh))
+    localStorage.setItem(assignedKey, JSON.stringify(fresh))
     return fresh
   })
+  const [done, setDone] = useState<string[]>(() => readList(doneKey))
   const [index, setIndex] = useState(0)
 
-  /** aktuell angezeigte Aufgabe (wird ans Foto getaggt) */
-  const current: string | undefined = assigned[index]
+  /** noch offene (nicht erledigte) Aufgaben */
+  const open = assigned.filter((c) => !done.includes(c))
 
-  /** zwischen den zugeteilten Aufgaben umschalten */
+  /** aktuell angezeigte Aufgabe (wird ans Foto getaggt) */
+  const current: string | undefined = open[index % Math.max(1, open.length)]
+
+  /** zwischen den offenen Aufgaben umschalten */
   const next = useCallback(() => {
-    setIndex((i) => (assigned.length > 0 ? (i + 1) % assigned.length : 0))
-  }, [assigned.length])
+    setIndex((i) => i + 1)
+  }, [])
+
+  /** Aufgabe als erledigt markieren (Foto damit gemacht) → nicht mehr zeigen */
+  const markDone = useCallback(
+    (challenge: string) => {
+      setDone((prev) => {
+        if (prev.includes(challenge)) return prev
+        const nextDone = [...prev, challenge]
+        localStorage.setItem(doneKey, JSON.stringify(nextDone))
+        return nextDone
+      })
+      setIndex(0)
+    },
+    [doneKey],
+  )
 
   /** Reset für den nächsten Gast am selben Gerät */
   const reroll = useCallback(() => {
-    localStorage.removeItem(storageKey)
+    localStorage.removeItem(assignedKey)
+    localStorage.removeItem(doneKey)
     const fresh = pickChallenges(available, PER_GUEST)
-    if (fresh.length > 0) localStorage.setItem(storageKey, JSON.stringify(fresh))
+    if (fresh.length > 0) localStorage.setItem(assignedKey, JSON.stringify(fresh))
     setAssigned(fresh)
+    setDone([])
     setIndex(0)
-  }, [storageKey, available])
+  }, [assignedKey, doneKey, available])
 
-  return { assigned, current, next, reroll }
+  return { assigned, open, current, next, markDone, reroll }
 }

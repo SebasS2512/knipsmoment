@@ -1,6 +1,7 @@
 /**
  * Foto-Aufgabe im Knips-Screen — eine Einladung, kein Zwang.
- * Bei zwei zugeteilten Aufgaben schaltet ein Tap um.
+ * Erledigte Aufgaben blendet der Hook aus; bei mehreren offenen gibt es
+ * einen eigenen, gut tippbaren Wechsel-Button.
  */
 export function ChallengeChip({
   text,
@@ -12,16 +13,17 @@ export function ChallengeChip({
   onNext: () => void
 }) {
   if (!text) return null
-  const switchable = count > 1
   return (
-    <button
-      type="button"
-      className="challenge-chip"
-      onClick={switchable ? onNext : undefined}
-      disabled={!switchable}
-    >
-      <span className="cc-label">Aufgabe{switchable ? ' · tippen zum Wechseln ↻' : ''}</span>
-      {text}
-    </button>
+    <div className="challenge-box">
+      <div className="challenge-chip">
+        <span className="cc-label">Aufgabe</span>
+        {text}
+      </div>
+      {count > 1 && (
+        <button type="button" className="cc-switch" onClick={onNext}>
+          ↻ Andere Aufgabe
+        </button>
+      )}
+    </div>
   )
 }

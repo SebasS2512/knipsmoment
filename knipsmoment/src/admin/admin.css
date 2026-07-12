@@ -81,6 +81,21 @@
   margin-bottom: 24px;
 }
 .onb .btn { width: 100%; margin-top: 10px; }
+/* Bearbeiten-Seite: mehr Inhalt als ein Viewport → normal scrollen */
+.onb.scroll {
+  justify-content: flex-start;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+.onb .linkrow {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 8px 8px 13px;
+}
+.onb .linkrow .datestamp { font-size: 13px; overflow-wrap: anywhere; }
+.onb .linkrow .btn.copy { width: auto; margin: 0; padding: 8px 14px; min-height: 36px; font-size: 12px; }
 .onb .inp.serif { font-family: var(--serif); font-size: 20px; }
 .onb .login-switch { align-self: center; }
 

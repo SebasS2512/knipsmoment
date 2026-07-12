@@ -6,13 +6,22 @@ import { useAuth } from '../lib/useAuth'
 import { LoginScreen } from './LoginScreen'
 import { Dashboard } from './Dashboard'
 import { Onboarding } from './Onboarding'
+import { EventSettings } from './EventSettings'
+import type { CaptureMode, GalleryVisibility, GuestTheme } from '../types/models'
 import './admin.css'
 
 export interface AdminEvent {
   id: string
   coupleNames: string
   dateLabel: string // "12·07·2025"
+  dateISO: string   // "2025-07-12" (für <input type=date>)
   location: string
+  photoLimit: number
+  captureMode: CaptureMode
+  galleryVisible: GalleryVisibility
+  theme: GuestTheme
+  challenges: string[]
+  slug: string
 }
 
 function formatAdminDate(date: Timestamp): string {
@@ -51,6 +60,7 @@ export function AdminApp() {
 
 function AdminEventGate({ user }: { user: User }) {
   const [state, setState] = useState<EventState>('loading')
+  const [editing, setEditing] = useState(false)
 
   const loadEvent = useCallback(async () => {
     setState('loading')
@@ -63,11 +73,19 @@ function AdminEventGate({ user }: { user: User }) {
       return
     }
     const data = d.data()
+    const date = (data.date as Timestamp).toDate()
     setState({
       id: d.id,
       coupleNames: data.coupleNames as string,
       dateLabel: formatAdminDate(data.date as Timestamp),
+      dateISO: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
       location: data.location as string,
+      photoLimit: data.photoLimit as number,
+      captureMode: (data.captureMode as CaptureMode) ?? 'both',
+      galleryVisible: (data.galleryVisible as GalleryVisibility) ?? 'after_approval',
+      theme: (data.theme as GuestTheme) ?? 'finder',
+      challenges: Array.isArray(data.challenges) ? (data.challenges as string[]) : [],
+      slug: (data.slug as string) ?? d.id,
     })
   }, [user.uid])
 
@@ -86,5 +104,16 @@ function AdminEventGate({ user }: { user: User }) {
   if (state === 'none') {
     return <Onboarding adminUid={user.uid} onDone={() => void loadEvent()} />
   }
-  return <Dashboard event={state} />
+  if (editing) {
+    return (
+      <EventSettings
+        event={state}
+        onClose={(saved) => {
+          setEditing(false)
+          if (saved) void loadEvent()
+        }}
+      />
+    )
+  }
+  return <Dashboard event={state} onEdit={() => setEditing(true)} />
 }

@@ -67,7 +67,7 @@ function stamp(d: Date | null): string {
 }
 
 /** Admin-Dashboard: sichten, freigeben/ablehnen/löschen, herunterladen (§4.4) */
-export function Dashboard({ event }: { event: AdminEvent }) {
+export function Dashboard({ event, onEdit }: { event: AdminEvent; onEdit: () => void }) {
   const [photos, setPhotos] = useState<AdminPhoto[]>([])
   const [tab, setTab] = useState<Tab>('all')
   const [sort, setSort] = useState<Sort>('newest')
@@ -199,6 +199,9 @@ export function Dashboard({ event }: { event: AdminEvent }) {
           </div>
         </div>
         <div className="top-actions">
+          <button type="button" className="signout" onClick={onEdit}>
+            ✎ Bearbeiten
+          </button>
           <button type="button" className="signout" onClick={() => signOut(auth!)}>
             Abmelden
           </button>
