@@ -23,6 +23,7 @@ export interface WeddingEvent {
   captureMode: CaptureMode
   galleryVisible: GalleryVisibility
   theme?: GuestTheme           // default 'finder'
+  challenges?: string[]        // Foto-Aufgaben; leer/fehlend = Feature aus
   slug: string                 // "lj25" → knipsmoment.app/l/lj25
   createdAt: Timestamp
   adminUid: string
@@ -34,6 +35,7 @@ export interface Photo {
   storagePath: string          // events/{eventId}/photos/{photoId}.jpg
   status: PhotoStatus
   guestName?: string
+  challenge?: string           // beim Knipsen angezeigte Foto-Aufgabe
   guestSessionId: string       // anonyme Session/Gerät-ID
   createdAt: Timestamp
   width: number

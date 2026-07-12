@@ -7,6 +7,7 @@ type QueueItem = {
   id: string
   file: File
   guestName?: string
+  challenge?: string
   status: 'queued' | 'uploading' | 'done' | 'error'
 }
 
@@ -46,7 +47,7 @@ export function useUploadQueue(eventId: string, guestSessionId: string) {
         next.status = 'uploading'
         sync()
         try {
-          await uploadPhoto(eventId, next.file, guestSessionId, next.guestName)
+          await uploadPhoto(eventId, next.file, guestSessionId, next.guestName, next.challenge)
           next.status = 'done'
         } catch {
           next.status = 'error'
@@ -59,9 +60,9 @@ export function useUploadQueue(eventId: string, guestSessionId: string) {
   }, [eventId, guestSessionId, sync])
 
   const enqueue = useCallback(
-    (file: File, guestName?: string) => {
+    (file: File, guestName?: string, challenge?: string) => {
       if (!isFirebaseConfigured) return // Demo-Modus: nur lokal
-      queue.current.push({ id: randomId(), file, guestName, status: 'queued' })
+      queue.current.push({ id: randomId(), file, guestName, challenge, status: 'queued' })
       sync()
       void process()
     },

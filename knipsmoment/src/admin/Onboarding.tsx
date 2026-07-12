@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore'
 import QRCode from 'qrcode'
 import { db } from '../lib/firebase'
+import { CHALLENGE_SUGGESTIONS } from '../lib/challenges'
 import {
   PHOTO_LIMIT_DEFAULT,
   PHOTO_LIMIT_MAX,
@@ -21,7 +22,7 @@ import {
   type GuestTheme,
 } from '../types/models'
 
-type Step = 'basics' | 'film' | 'qr'
+type Step = 'basics' | 'film' | 'challenges' | 'qr'
 
 const CAPTURE_OPTIONS: { key: CaptureMode; label: string }[] = [
   { key: 'finder', label: 'Sucher' },
@@ -81,6 +82,30 @@ export function Onboarding({
   const [galleryVisible, setGalleryVisible] = useState<GalleryVisibility>('after_approval')
   const [theme, setTheme] = useState<GuestTheme>('finder')
 
+  // Schritt 3 — Foto-Aufgaben (Challenges)
+  const [challengesEnabled, setChallengesEnabled] = useState(true)
+  const [selectedChallenges, setSelectedChallenges] = useState<Set<string>>(
+    () => new Set(CHALLENGE_SUGGESTIONS),
+  )
+  const [customChallenges, setCustomChallenges] = useState<string[]>([])
+  const [customInput, setCustomInput] = useState('')
+
+  function toggleChallenge(c: string) {
+    setSelectedChallenges((prev) => {
+      const next = new Set(prev)
+      if (next.has(c)) next.delete(c)
+      else next.add(c)
+      return next
+    })
+  }
+
+  function addCustomChallenge() {
+    const text = customInput.trim()
+    if (!text) return
+    if (!customChallenges.includes(text)) setCustomChallenges((l) => [...l, text])
+    setCustomInput('')
+  }
+
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [slug, setSlug] = useState('')
@@ -96,6 +121,12 @@ export function Onboarding({
     setError('')
     try {
       const s = await freeSlug(baseSlug(coupleNames, date))
+      const challenges = challengesEnabled
+        ? [
+            ...CHALLENGE_SUGGESTIONS.filter((c) => selectedChallenges.has(c)),
+            ...customChallenges,
+          ]
+        : []
       // Doc-ID = Slug: lesbare URLs, ein Lookup weniger
       await setDoc(doc(db!, 'events', s), {
         coupleNames: coupleNames.trim(),
@@ -105,6 +136,7 @@ export function Onboarding({
         captureMode,
         galleryVisible,
         theme,
+        challenges,
         slug: s,
         createdAt: serverTimestamp(),
         adminUid,
@@ -233,12 +265,108 @@ export function Onboarding({
           </div>
         </div>
 
+        <button type="button" className="btn btn-primary" onClick={() => setStep('challenges')}>
+          Weiter →
+        </button>
+        <button type="button" className="login-switch" onClick={() => setStep('basics')}>
+          ← Zurück
+        </button>
+      </div>
+    )
+  }
+
+  if (step === 'challenges') {
+    return (
+      <div className="onb">
+        <span className="eyebrow">Foto-Aufgaben</span>
+        <h3>Kleine Missionen?</h3>
+        <p className="onb-sub">
+          Jeder Gast bekommt 1–2 Aufgaben zufällig zugeteilt — als Einladung,
+          nicht als Pflicht.
+        </p>
+
+        <div className="field">
+          <div className="seg">
+            <button
+              type="button"
+              className={`o ${challengesEnabled ? 'on' : ''}`}
+              onClick={() => setChallengesEnabled(true)}
+            >
+              An
+            </button>
+            <button
+              type="button"
+              className={`o ${!challengesEnabled ? 'on' : ''}`}
+              onClick={() => setChallengesEnabled(false)}
+            >
+              Aus
+            </button>
+          </div>
+        </div>
+
+        {challengesEnabled && (
+          <>
+            <div className="chk-list">
+              {CHALLENGE_SUGGESTIONS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  className={`chk ${selectedChallenges.has(c) ? 'on' : ''}`}
+                  onClick={() => toggleChallenge(c)}
+                >
+                  <span className="box" aria-hidden="true" />
+                  {c}
+                </button>
+              ))}
+              {customChallenges.map((c) => (
+                <div key={c} className="chk on custom">
+                  <span className="box" aria-hidden="true" />
+                  {c}
+                  <button
+                    type="button"
+                    className="rm"
+                    aria-label="Aufgabe entfernen"
+                    onClick={() =>
+                      setCustomChallenges((l) => l.filter((x) => x !== c))
+                    }
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="chk-add">
+              <input
+                className="inp"
+                placeholder="Eigene Aufgabe …"
+                maxLength={120}
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    addCustomChallenge()
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="btn btn-ghost add"
+                onClick={addCustomChallenge}
+                disabled={!customInput.trim()}
+              >
+                +
+              </button>
+            </div>
+          </>
+        )}
+
         {error && <p className="login-error">{error}</p>}
 
         <button type="button" className="btn btn-primary" disabled={busy} onClick={createEvent}>
           QR erstellen →
         </button>
-        <button type="button" className="login-switch" onClick={() => setStep('basics')}>
+        <button type="button" className="login-switch" onClick={() => setStep('film')}>
           ← Zurück
         </button>
       </div>

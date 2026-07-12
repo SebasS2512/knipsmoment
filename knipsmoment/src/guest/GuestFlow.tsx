@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getGuestSessionId, useGuestSession } from './useGuestSession'
 import { useUploadQueue } from './useUploadQueue'
+import { useChallenges } from './useChallenges'
 import { WelcomeScreen } from './WelcomeScreen'
 import { CameraScreen } from './CameraScreen'
 import { PolaroidScreen } from './PolaroidScreen'
@@ -15,7 +16,8 @@ export interface GuestEventConfig {
   dateLabel: string   // "12 · 07 · 25"
   photoLimit: number
   captureMode: CaptureMode
-  theme: GuestTheme   // Stil-Variante des Knips-Screens (§4.2)
+  theme: GuestTheme     // Stil-Variante des Knips-Screens (§4.2)
+  challenges: string[]  // aktivierte Foto-Aufgaben (leer = Feature aus)
 }
 
 /**
@@ -40,6 +42,9 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
     localStorage.setItem('km:guestName', guestName)
   }, [guestName])
 
+  // Foto-Aufgaben: 1–2 zufällig pro Gast, stabil pro Session
+  const challenges = useChallenges(event.id, event.challenges)
+
   // Object-URLs der in dieser Sitzung geknipsten Bilder (für Streifen & Roll);
   // nach einem Reload zeigen die Frames wieder Platzhalter-Schraffur.
   const shotsRef = useRef<string[]>([])
@@ -56,13 +61,14 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
     if (remaining <= 0) return
     shotsRef.current = [...shotsRef.current, URL.createObjectURL(file)]
     setTakenCount(takenCount + 1)
-    enqueue(file, guestName)
+    enqueue(file, guestName, challenges.current)
   }
 
   function handleReset() {
     for (const url of shotsRef.current) URL.revokeObjectURL(url)
     shotsRef.current = []
     setTakenCount(0)
+    challenges.reroll() // nächster Gast → neue Zufallsaufgaben
     setScreen('welcome')
   }
 
@@ -73,6 +79,9 @@ export function GuestFlow({ event }: { event: GuestEventConfig }) {
     captureMode: event.captureMode,
     shots: shotsRef.current,
     upload: summary,
+    challenge: challenges.current,
+    challengeCount: challenges.assigned.length,
+    onNextChallenge: challenges.next,
     onPhoto: handlePhoto,
     onRetryUpload: retryFailed,
   }

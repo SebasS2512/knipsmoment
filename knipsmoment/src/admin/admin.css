@@ -127,6 +127,61 @@
   cursor: pointer;
 }
 
+.onb-sub {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin: -14px 0 18px;
+  text-wrap: pretty;
+}
+
+/* Foto-Aufgaben: Checkliste */
+.chk-list {
+  max-height: 38vh;
+  overflow-y: auto;
+  border: 1px solid var(--line-2, rgba(42,40,34,0.07));
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 10px;
+}
+.chk {
+  display: flex; align-items: flex-start; gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  background: none; border: none;
+  border-radius: 6px;
+  font-family: var(--sans); font-size: 13px; line-height: 1.4;
+  color: var(--ink-soft);
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+.chk.on { color: var(--ink); }
+.chk .box {
+  flex: none;
+  width: 16px; height: 16px;
+  margin-top: 1px;
+  border: 1.5px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper-2);
+}
+.chk.on .box {
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+}
+.chk.custom { padding-right: 34px; }
+.chk .rm {
+  position: absolute; right: 6px; top: 50%;
+  transform: translateY(-50%);
+  width: 24px; height: 24px;
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+.chk-add { display: flex; gap: 8px; margin-bottom: 16px; }
+.chk-add .inp { flex: 1; }
+.chk-add .btn.add { width: 46px; min-width: 46px; margin: 0; padding: 0; }
+
 /* QR-Screen (heller sage-mist-Hintergrund) */
 .qr-step {
   max-width: none;
@@ -234,6 +289,35 @@
 .tab .b { display: inline-block; margin-left: 6px; color: var(--amber); }
 .tab.on .b { color: var(--amber-glow); }
 .tab.sort { border-color: var(--line); }
+
+/* Erfüllte Foto-Aufgaben */
+.challenge-summary {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 0 28px 12px;
+}
+.challenge-summary .cs-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-soft);
+  margin-right: 4px;
+}
+.challenge-summary .cs-chip {
+  font-family: var(--sans); font-size: 12px;
+  color: var(--ink-soft);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+.challenge-summary .cs-chip b { color: var(--accent-deep); font-weight: 600; }
+
+.shot .badge-ch {
+  position: absolute; left: 8px; bottom: 7px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--accent-deep);
+}
 
 .admin-empty {
   padding: 48px 28px;

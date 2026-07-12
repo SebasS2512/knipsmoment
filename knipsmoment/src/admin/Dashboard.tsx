@@ -23,6 +23,8 @@ type AdminPhoto = {
   storagePath: string
   status: PhotoStatus
   guestSessionId: string
+  guestName?: string
+  challenge?: string
   createdAt: Date | null
 }
 
@@ -86,6 +88,8 @@ export function Dashboard({ event }: { event: AdminEvent }) {
             storagePath: data.storagePath as string,
             status: data.status as PhotoStatus,
             guestSessionId: data.guestSessionId as string,
+            guestName: data.guestName as string | undefined,
+            challenge: data.challenge as string | undefined,
             createdAt: (data.createdAt as Timestamp | null)?.toDate() ?? null,
           }
         }),
@@ -113,6 +117,15 @@ export function Dashboard({ event }: { event: AdminEvent }) {
     const list = photos.filter((p) => tab === 'all' || p.status === tab)
     return sort === 'newest' ? list : [...list].reverse()
   }, [photos, tab, sort])
+
+  // Erfüllte Foto-Aufgaben mit Anzahl (aus den getaggten Fotos)
+  const challengeCounts = useMemo(() => {
+    const m = new Map<string, number>()
+    for (const p of photos) {
+      if (p.challenge) m.set(p.challenge, (m.get(p.challenge) ?? 0) + 1)
+    }
+    return [...m.entries()].sort((a, b) => b[1] - a[1])
+  }, [photos])
 
   function setStatus(p: AdminPhoto, status: PhotoStatus) {
     void updateDoc(doc(db!, 'events', event.id, 'photos', p.id), { status })
@@ -252,6 +265,17 @@ export function Dashboard({ event }: { event: AdminEvent }) {
         </button>
       </div>
 
+      {challengeCounts.length > 0 && (
+        <div className="challenge-summary">
+          <span className="cs-label">Erfüllte Aufgaben</span>
+          {challengeCounts.map(([text, n]) => (
+            <span key={text} className="cs-chip" title={text}>
+              {text.length > 48 ? `${text.slice(0, 48)}…` : text} <b>×{n}</b>
+            </span>
+          ))}
+        </div>
+      )}
+
       {visible.length === 0 ? (
         <p className="admin-empty">
           {photos.length === 0
@@ -261,9 +285,16 @@ export function Dashboard({ event }: { event: AdminEvent }) {
       ) : (
         <div className="admin-grid">
           {visible.map((p) => (
-            <div key={p.id} className="shot">
+            <div
+              key={p.id}
+              className="shot"
+              title={[p.guestName, p.challenge && `Aufgabe: ${p.challenge}`]
+                .filter(Boolean)
+                .join(' · ')}
+            >
               <img src={p.url} alt="" loading="lazy" />
               <span className={`badge ${BADGE[p.status].cls}`}>{BADGE[p.status].text}</span>
+              {p.challenge && <span className="badge-ch">✦ Aufgabe</span>}
               <span className="stamp datestamp">{stamp(p.createdAt)}</span>
               <div className="actions">
                 {p.status !== 'approved' && (

@@ -23,9 +23,16 @@ Firebase-Projekt `knipsmoment` verifiziert:
 - **Rules** (`firestore.rules`, `storage.rules`): deployed. Gäste dürfen anonym
   nur `pending`-Fotos anlegen und einzelne Storage-Objekte lesen (kein list);
   alles andere nur der Event-Admin (`adminUid`).
-- Es existieren Testdaten im Live-Projekt: Konten `brautpaar-test@knipsmoment.de`
-  und `onboarding-test@knipsmoment.de` (Passwort jeweils `Filmrolle-Demo25!`),
-  Events `demo` und `ab26`, ein Testfoto unter `events/demo/photos`.
+- Es existieren Testdaten im Live-Projekt: Konten `brautpaar-test@knipsmoment.de`,
+  `onboarding-test@knipsmoment.de` und `challenge-test@knipsmoment.de`
+  (Passwort jeweils `Filmrolle-Demo25!`), Events `demo`, `ab26` und `mt27`
+  samt Testfotos.
+- **Foto-Aufgaben (Challenges)**: Vorschlagsliste in `src/lib/challenges.ts`,
+  Onboarding-Schritt „Kleine Missionen?" (an/aus, an-/abwählbar, eigene
+  Aufgaben), Event-Feld `challenges: string[]`. Gäste bekommen 1–2 zufällig
+  (`useChallenges.ts`, stabil pro Session, neu beim Reset); die beim Knipsen
+  angezeigte Aufgabe wandert als `challenge` ins Foto-Dokument; Dashboard
+  zeigt Badge + „Erfüllte Aufgaben"-Übersicht.
 
 - **Schritt 7 (ZIP-Export) ist ebenfalls fertig**: clientseitig mit `jszip`
   (`exportZip` in `src/admin/Dashboard.tsx`), exportiert den aktiven Tab,

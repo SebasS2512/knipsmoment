@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { CaptureMode } from '../types/models'
 import type { QueueSummary } from './useUploadQueue'
 import { useShutter } from './useShutter'
+import { ChallengeChip } from './ChallengeChip'
 import { useOnline } from '../lib/useOnline'
 
 const STRIP_MAX = 7
@@ -20,6 +21,9 @@ export function CameraScreen({
   captureMode,
   shots,
   upload,
+  challenge,
+  challengeCount,
+  onNextChallenge,
   onPhoto,
   onRetryUpload,
 }: {
@@ -30,6 +34,9 @@ export function CameraScreen({
   captureMode: CaptureMode
   shots: string[]
   upload: QueueSummary
+  challenge?: string
+  challengeCount: number
+  onNextChallenge: () => void
   onPhoto: (file: File) => void
   onRetryUpload: () => void
 }) {
@@ -123,6 +130,11 @@ export function CameraScreen({
           </span>
         </div>
         <span className="vf-date datestamp">{dateLabel.replace(/\s/g, '')}</span>
+
+        {/* Foto-Aufgabe (falls im Onboarding aktiviert) */}
+        <div className="vf-challenge">
+          <ChallengeChip text={challenge} count={challengeCount} onNext={onNextChallenge} />
+        </div>
 
         {/* Upload-Zustand: offline / sichern läuft / Fehler mit Retry (§8) */}
         {!online && (upload.failed > 0 || upload.pending > 0) ? (

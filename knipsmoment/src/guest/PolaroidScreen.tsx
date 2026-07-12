@@ -2,6 +2,7 @@ import type { CaptureMode } from '../types/models'
 import type { QueueSummary } from './useUploadQueue'
 import { useShutter } from './useShutter'
 import { UploadStatus } from './UploadStatus'
+import { ChallengeChip } from './ChallengeChip'
 
 /**
  * Variante B — „Das Polaroid" (§4.2, `05-variante-b-polaroid.png`).
@@ -15,6 +16,9 @@ export function PolaroidScreen({
   captureMode,
   shots,
   upload,
+  challenge,
+  challengeCount,
+  onNextChallenge,
   onPhoto,
   onRetryUpload,
 }: {
@@ -24,6 +28,9 @@ export function PolaroidScreen({
   captureMode: CaptureMode
   shots: string[]
   upload: QueueSummary
+  challenge?: string
+  challengeCount: number
+  onNextChallenge: () => void
   onPhoto: (file: File) => void
   onRetryUpload: () => void
 }) {
@@ -50,6 +57,8 @@ export function PolaroidScreen({
           <div className="d">{dateLabel.replace(/\s/g, '')}</div>
         </div>
       </div>
+
+      <ChallengeChip text={challenge} count={challengeCount} onNext={onNextChallenge} />
 
       <button
         type="button"

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs, limit, query, where, type Timestamp } from 'firebase/firestore'
 import { db, isFirebaseConfigured } from './firebase'
+import { CHALLENGE_SUGGESTIONS } from './challenges'
 import type { CaptureMode, GuestTheme } from '../types/models'
 import type { GuestEventConfig } from '../guest/GuestFlow'
 
@@ -12,6 +13,7 @@ export const DEMO_EVENT: GuestEventConfig = {
   photoLimit: 10,
   captureMode: 'both',
   theme: 'finder',
+  challenges: CHALLENGE_SUGGESTIONS,
 }
 
 /** Feature-Flag zum Ausprobieren der Stil-Varianten: ?theme=polaroid|filmstrip|finder */
@@ -89,6 +91,7 @@ export function useEvent(): EventState {
             photoLimit: data.photoLimit as number,
             captureMode: (data.captureMode as CaptureMode) ?? 'both',
             theme: themeOverride() ?? (data.theme as GuestTheme | undefined) ?? 'finder',
+            challenges: Array.isArray(data.challenges) ? (data.challenges as string[]) : [],
           },
         })
       })

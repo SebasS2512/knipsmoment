@@ -2,6 +2,7 @@ import type { CaptureMode } from '../types/models'
 import type { QueueSummary } from './useUploadQueue'
 import { useShutter } from './useShutter'
 import { UploadStatus } from './UploadStatus'
+import { ChallengeChip } from './ChallengeChip'
 
 /**
  * Variante C — „Der Filmstreifen" (§4.2, `06-variante-c-filmstreifen.png`).
@@ -14,6 +15,9 @@ export function FilmstripScreen({
   captureMode,
   shots,
   upload,
+  challenge,
+  challengeCount,
+  onNextChallenge,
   onPhoto,
   onRetryUpload,
 }: {
@@ -22,6 +26,9 @@ export function FilmstripScreen({
   captureMode: CaptureMode
   shots: string[]
   upload: QueueSummary
+  challenge?: string
+  challengeCount: number
+  onNextChallenge: () => void
   onPhoto: (file: File) => void
   onRetryUpload: () => void
 }) {
@@ -48,6 +55,7 @@ export function FilmstripScreen({
           <br />
           {remaining === 1 ? 'Bild' : 'Bilder'}
         </div>
+        <ChallengeChip text={challenge} count={challengeCount} onNext={onNextChallenge} />
         <button
           type="button"
           className="btn btn-primary vc-shutter"
